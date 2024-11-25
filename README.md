@@ -74,3 +74,44 @@ import lit from "@astrojs/lit";
 ...
 lit(),
 ```
+
+## Build: (WIP)
+
+> [!IMPORTANT]
+> `const.ts` set: const DB = {...}
+
+### prepare
+
+```sh
+podman logout
+```
+
+```bash
+sudo podman run --rm --privileged multiarch/qemu-user-static --reset -p yes
+```
+
+```sh
+podman login --username webslab --password "<password>"
+```
+
+### build
+
+```sh
+deno task build
+```
+
+```bash
+# arm
+podman build --rm -t webslab/base:v0.0.3-arm64 --platform=linux/arm64 .
+
+# wip
+podman build --rm -t webslab/base:latest --platform=linux/arm64,linux/amd64 .
+```
+
+```sh
+podman push webslab/base:v0.0.3-arm64
+```
+
+```sh
+podman logout
+```

@@ -1,5 +1,8 @@
 # TODO:
 
+- [ ] image: configure github package and docker
+  - the container should accept db connection info
+  - should build for arm64 and amd64
 - [ ] analytic: as asset avoiding wait for db
 - [x] anonymous: manage anonymous users
 
