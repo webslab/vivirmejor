@@ -12,7 +12,7 @@
 		"$styles": "./src/_includes/styles/*",
 		"$lib": "./src/_includes/lib/*",
 
-		"@webslab/shared": "jsr:@webslab/shared@^0.0.1",
+		"@webslab/shared": "jsr:@webslab/shared@^0.0.2",
 
 		"@astrojs/lit": "npm:@astrojs/lit@^4.3.0",
 		"@astrojs/sitemap": "npm:@astrojs/sitemap@^3.2.1",
@@ -32,6 +32,6 @@
 		"indentWidth": 4,
 		"semiColons": true,
 		"singleQuote": false,
-		"exclude": ["dist", ".astro", "public", "**/*.yml"]
+		"exclude": [".github", ".astro", "public", "dist", "README.md"]
 	}
 }
