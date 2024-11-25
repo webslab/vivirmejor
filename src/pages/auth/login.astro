@@ -1,0 +1,110 @@
+---
+import BaseLayout from '$layouts/Base.astro'
+---
+
+<BaseLayout
+  auth={false}
+  admin={false}
+  title="Login"
+  description="Login access">
+  <h1>Login</h1>
+
+  <div class="p-4 pb-5">
+    <div class="row justify-content-center">
+      <div class="col col-lg-6 px-4 py-3 border rounded">
+        <form id="form-login">
+          <div class="mb-3">
+            <label
+              class="form-label"
+              for="inputUsername">
+              Username
+            </label>
+
+            <input
+              class="form-control"
+              id="inputUsername"
+              name="username"
+              autocomplete="on"
+              type="text" />
+          </div>
+
+          <div class="mb-3">
+            <label
+              class="form-label"
+              for="inputPassword">
+              Password
+            </label>
+
+            <input
+              class="form-control"
+              id="inputPassword"
+              name="password"
+              autocomplete="on"
+              type="password" />
+          </div>
+
+          <div class="d-flex justify-content-between">
+            <div class="mb-3 form-check">
+              <input
+                class="form-check-input"
+                id="inputCheck"
+                type="checkbox" />
+
+              <label
+                class="form-check-label"
+                for="inputCheck">
+                Remember me
+              </label>
+            </div>
+
+            <button
+              type="submit"
+              class="btn btn-primary">
+              Submit
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</BaseLayout>
+
+<script>
+  import { authService } from '$lib/auth'
+
+  const form: HTMLElement  = document.getElementById('form-login')
+
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault()
+
+    const formData = new FormData(form as HTMLFormElement)
+    const data = Object.fromEntries(formData)
+
+    const { username, password } = data
+
+    // validate form
+    if (!username || !password) {
+      alert('Error: Invalid credentials\n- Please fill in all fields')
+      return
+    }
+
+    try {
+      await auth.signin(username, password)
+
+      const pathname = localStorage.getItem('pathname')
+
+      if (pathname) {
+        localStorage.removeItem('pathname')
+        window.location.href = pathname
+
+        return
+      } else {
+        window.location.href = '/'
+
+        return
+      }
+    } catch (err) {
+      alert(`Error: ${err.message}`)
+    }
+  })
+</script>

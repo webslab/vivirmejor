@@ -1,0 +1,107 @@
+---
+import BaseLayout from '$layouts/Base.astro'
+---
+
+<link
+  rel="stylesheet"
+  onload="this.onload=null;this.rel='stylesheet'"
+  href="https://unpkg.com/jodit@4.0.1/es2021/jodit.min.css" />
+
+<BaseLayout
+  auth={true}
+  admin={true}
+  title="Post Editor"
+  description="Posts Editor for the Blog">
+
+  <div class="d-flex flex-row justify-content-center align-items-center px-3">
+    <a
+      class="d-none d-lg-block btn btn-outline-primary pt-0"
+      href="/auth/admin/posts">
+      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-arrow-left" viewBox="0 0 16 16">
+        <path fill-rule="evenodd" d="M15 8a.5.5 0 0 0-.5-.5H2.707l3.147-3.146a.5.5 0 1 0-.708-.708l-4 4a.5.5 0 0 0 0 .708l4 4a.5.5 0 0 0 .708-.708L2.707 8.5H14.5A.5.5 0 0 0 15 8"/>
+      </svg>
+    </a>
+
+    <h1 class="w-100">Post Editor</h1>
+
+    <button id="save" type="submit" class="btn btn-primary">Save</button>
+    <!-- <a -->
+    <!--   type="button" -->
+    <!--   class="d-none d-lg-block btn btn-primary flex-shrink-1" -->
+    <!--   href="/auth/admin/posts/create/">Create</a> -->
+  </div>
+
+  <hr />
+
+  <div class="container">
+    <div class="row">
+      <div class="col-md-8">
+        <div class="mb-3">
+          <label for="title" class="form-label">Title</label>
+          <input type="text" class="form-control" id="title" value="" />
+        </div>
+
+        <div class="mb-3">
+          <label for="content" class="form-label">Content</label>
+          <textarea
+            class="w-100"
+            style="min-height: 400px"
+            id="post-content"
+            name="content"></textarea>
+        </div>
+      </div>
+
+      <div class="col-md-4">
+        <div class="mb-3">
+          <label for="title" class="form-label">Author</label>
+          <input type="text" class="form-control" id="author" disabled />
+        </div>
+
+        <div class="mb-3">
+          <label for="hero" class="form-label">Hero Image</label>
+          <input type="text" class="form-control" id="hero" />
+          <!-- <input type="file" class="form-control" id="hero" /> -->
+        </div>
+
+        <img id="hero-preview" class="img-fluid rounded" />
+      </div>
+
+      <!-- <button id="save" type="submit" class="btn btn-primary col">Save</button> -->
+    </div>
+  </div>
+
+  <script>
+    import { StringRecordId } from 'surrealdb'
+
+    import { authService } from '$lib/auth'
+    import { joditInit } from '$lib/editorUtils'
+
+    authService.isReady.then(() => {
+      const db = authService.getDb()
+
+      const hero = document.getElementById('hero')
+      const title = document.getElementById('title')
+      const author = document.getElementById('author')
+      const content = document.getElementById('post-content')
+
+      author.value = authService.getUser().id
+
+      joditInit(content)
+
+      const save = document.getElementById('save')
+      save.addEventListener('click', async () => {
+        const post = {
+          hero: hero.value,
+          title: title.value,
+          author: new StringRecordId(author.value),
+          content: content.value,
+        }
+
+        const res = await db.create('post', post)
+
+        // some kind of alert or redirect
+        window.location.href = `/auth/admin/posts/edit?id=${res[0].id.toString()}`
+      })
+    })
+  </script>
+</BaseLayout>

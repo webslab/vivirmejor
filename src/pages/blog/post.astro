@@ -1,0 +1,111 @@
+---
+import '$styles/article.scss'
+import BaseLayout from '$layouts/Base.astro'
+---
+
+<style is:global>
+article {
+  min-height: 90vh;
+}
+
+article p img {
+  border-radius: 0.25rem;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.7);
+}
+</style>
+
+<BaseLayout
+  auth={false}
+  admin={false}
+  title="Blog"
+  description="The most recent blog posts">
+  <div class="d-flex justify-content-between mb-4">
+    <a class="text-decoration-none text-primary" href="/blog/">
+      <span class="display-6">&larr;</span>
+    </a>
+
+    <h1 id="post-title"></h1>
+
+    <div>
+      <p><span id="post-visits"></span> || <span id="post-likes"></span></p>
+    </div>
+  </div>
+
+  <div class="text-center mb-3">
+    <img
+      class="img-fluid rounded shadow"
+      loading="lazy"
+      width="960"
+      height="540"
+      id="post-hero"
+      alt="Post Hero"
+      src="" />
+  </div>
+
+  <article id="article"></article>
+</BaseLayout>
+
+<script>
+  import type { Post } from '$lib/types'
+  import type { RecordId } from 'surrealdb'
+  import { authService } from '$lib/auth'
+
+  const postSlug = new URLSearchParams(globalThis.location.search).get('slug')
+
+  if (!postSlug) {
+    globalThis.location.href = '/blog/'
+  }
+
+  authService.isReady.then(async () => {
+    const db = authService.getDb()
+    const rest: Post[][] = await db.query('SELECT * FROM post WHERE slug IS $slug;', {
+      slug: postSlug,
+    })
+
+    const post = rest[0][0]
+
+    if (!post) {
+      globalThis.location.href = '/blog/'
+    } else {
+      const article = document.getElementById('article')
+      const visits = document.getElementById('post-visits')
+      const likes = document.getElementById('post-likes')
+      const img: HTMLElement = document.getElementById('post-hero')
+      const h1 = document.getElementById('post-title')
+
+      visits.innerText = `Visits: ${post.visits || 0}`
+      likes.innerText = `Likes: ${post.likes || 0}`
+
+      h1.innerText = post.title
+      img.src = post.hero
+
+      article.innerHTML = post.content
+    }
+  })
+
+  // send like
+  document
+    .getElementById('post-likes')!
+    .addEventListener('click', async () => {
+      const db = authService.getDb()
+
+      try {
+        await db.query(
+          `
+            $user_id = type::record($user);
+            RELATE $user_id->likes->(SELECT id FROM ONLY post WHERE slug IS $slug LIMIT 1);
+          `,
+          { user: authService.getUser().id, slug: postSlug }, // TODO: getUser() should return anonymous user
+        )
+
+        const likes = document.getElementById('post-likes')!
+        likes.innerText = `Likes: ${parseInt(likes.innerText.split(' ')[1]) + 1}`
+      } catch (error: unknown) {
+        if (error!.toString().includes('likes_unique')) {
+          alert('You have already liked this post')
+        } else {
+          console.log(error)
+        }
+      }
+    })
+</script>

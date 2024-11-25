@@ -1,0 +1,83 @@
+// Include any default variable overrides here (though functions won't be available)
+// $primary: #008080; // teal
+$primary: #613583;
+$secondary: teal;
+$font-size-base: 1.25rem;
+
+@import "bootstrap/scss/bootstrap";
+
+// Then add additional custom code here
+:root {
+	--transition-duration: 2s;
+	// --bs-btn-hover-bg: var(--bs-primary);
+	// --bs-list-group-active-bg: var(--bs-primary);
+}
+
+:not(:defined) {
+	visibility: hidden;
+}
+
+h1 {
+	// color: $primary;
+	color: var(--bs-primary);
+	text-align: center;
+}
+
+main {
+	padding: 2rem;
+}
+
+.text-blue {
+	color: var(--bs-blue);
+}
+
+.bg-primary {
+	background-color: var(--bs-primary);
+}
+
+.text-primary {
+	color: var(--bs-primary);
+}
+
+.progress-bar {
+	background-color: var(--bs-primary);
+}
+
+.active {
+	// background-color: var(--bs-primary);
+}
+
+.nav-pills .nav-link.active,
+.nav-pills .show > .nav-link {
+	background-color: var(--bs-primary);
+}
+
+.list-group-horizontal > .list-group-item + .list-group-item.active {
+	background-color: var(--bs-primary);
+	border-color: var(--bs-primary);
+}
+
+.page-link.active,
+.active > .page-link {
+	background-color: var(--bs-primary);
+	border-color: var(--bs-primary);
+}
+
+.btn-primary {
+	background-color: var(--bs-primary);
+	border-color: var(--bs-primary);
+}
+
+.btn-check:checked + .btn {
+	// background-color: var(--bs-primary);
+	border-color: var(--bs-primary);
+}
+
+.border-primary {
+	border-color: var(--bs-primary);
+}
+
+.form-check-input:checked {
+	background-color: var(--bs-primary);
+	border-color: var(--bs-primary);
+}

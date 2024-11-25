@@ -1,0 +1,95 @@
+---
+import BaseLayout from '$layouts/Base.astro'
+---
+
+<style is:global>
+#posts-list {
+  min-height: 100svh;
+}
+
+#posts-list li * {
+  transition: all 0.5s;
+}
+
+#posts-list li:first-child {
+  width: 100%;
+  margin-bottom: 1rem;
+  text-align: center;
+}
+
+li a img {
+  border: 2px solid transparent;
+  filter: grayscale(50%);
+}
+
+li a:hover img {
+  border: 2px solid var(--bs-primary);
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.7);
+  filter: grayscale(0);
+}
+
+li a:hover p {
+  color: var(--bs-primary);
+}
+</style>
+
+<BaseLayout
+  auth={false}
+  admin={false}
+  title="Blog"
+  description="The most recent blog posts">
+
+  <h1 class="mb-4">Base Blog</h1>
+
+  <ul
+    class="d-flex flex-wrap justify-content-center gap-1 gap-lg-3 m-0 p-0 list-unstyled"
+    id="posts-list"></ul>
+</BaseLayout>
+
+<script>
+  import { authService } from '$lib/auth'
+  import type { Post } from '$lib/types'
+
+  const postsList = document.getElementById('posts-list')
+
+  authService.isReady.then(async() => {
+    // const res: Post[][] = await authService.getDb().query('SELECT hero,title,slug,publish FROM post ORDER BY publish DESC;')
+    const res: Post[][] = await authService
+      .getDb()
+      .query('SELECT hero,title,slug,publish FROM post WHERE !draft AND publish < time::now() ORDER BY publish DESC;')
+
+    for (const post of res[0]) {
+      const index = res[0].indexOf(post)
+      const date = post.publish.toLocaleDateString('es-ES', {
+        year: 'numeric',
+        month: 'short',
+        day: 'numeric'
+      })
+
+      const li = document.createElement('li')
+      li.innerHTML = `
+        <a
+          class="d-block text-center text-decoration-none"
+          aria-label=${post.title}
+          href=/blog/post?slug=${post.slug}>
+          <img
+            class="img-fluid rounded"
+            src=${post.hero}
+            alt=${post.title}
+            width="${index === 0 ? 960 : 480}"
+            height="${index === 0 ? 540 : 270}"
+            size="(max-width: 720px) 540px, 960px"
+            loading="${index === 0 ? 'eager' : 'lazy'}"
+          />
+
+          <p class="${index === 0 ? 'display-6' : 'lead'}'m-0 l-1'">
+            ${post.title}
+            <small class="d-block text-secondary">${date}</small>
+          </p>
+        </a>
+      `
+
+      postsList.appendChild(li)
+    }
+  })
+</script>

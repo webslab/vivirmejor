@@ -1,0 +1,37 @@
+{
+	"tasks": {
+		"dev": "astro dev",
+		"astro": "astro",
+		"build": "astro build",
+		"preview": "astro preview"
+	},
+	"imports": {
+		"$components": "./src/_includes/components/*",
+		"$layouts": "./src/_includes/layouts/*",
+		"$images": "./src/_includes/images/*",
+		"$styles": "./src/_includes/styles/*",
+		"$lib": "./src/_includes/lib/*",
+
+		"@webslab/shared": "jsr:@webslab/shared@^0.0.1",
+
+		"@astrojs/lit": "npm:@astrojs/lit@^4.3.0",
+		"@astrojs/sitemap": "npm:@astrojs/sitemap@^3.2.1",
+		"@webcomponents/template-shadowroot": "npm:@webcomponents/template-shadowroot@^0.2.1",
+		"astro": "npm:astro@^4.16.7",
+		"astro-purgecss": "npm:astro-purgecss@^4.6.1",
+		"bootstrap": "npm:bootstrap@^5.3.3",
+		"jodit": "npm:jodit@4.2.38",
+		"purgecss": "npm:purgecss@^6.0.0",
+		"sass": "npm:sass@^1.80.4",
+		"sharp": "npm:sharp@^0.33.5",
+		"surrealdb": "npm:surrealdb@^1.0.6"
+	},
+	"fmt": {
+		"useTabs": true,
+		"lineWidth": 96,
+		"indentWidth": 4,
+		"semiColons": true,
+		"singleQuote": false,
+		"exclude": ["dist", ".astro", "public", "**/*.yml"]
+	}
+}

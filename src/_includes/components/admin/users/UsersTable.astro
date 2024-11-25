@@ -1,0 +1,154 @@
+---
+import { WlDatabase } from '@webslab/shared/components/database';
+import PlaceHolder from './UsersTablePlace.astro'
+---
+
+<WlDatabase
+  live={true}
+  target="tbody"
+  query="SELECT time::format(auth_until, '%d-%m-%Y') as auth_until, * FROM user;"
+  client:only="lit">
+
+  <PlaceHolder />
+
+  <template slot="template" is:raw>
+    {% for item in result[0] %}
+    <tr data-id="{{ item.id }}">
+      <td class="d-none d-lg-table-cell">{{ item.name }}</td>
+      <td class="d-table-cell">{{ item.username }}</td>
+      <td class="d-none d-md-table-cell">{{ item.email }}</td>
+      <td>
+        <button
+          class="btn btn-sm"
+          data-action="role">{{ "🙃" if item.role else "🙂" }}</button>
+          {{ item.role or 'user' }}
+      </td>
+      <td class="d-none d-lg-table-cell">{{ item.auth_until }}</td>
+      <td class="d-none d-lg-table-cell text-center">
+        <button data-action="stats" class="btn btn-sm btn-info">Stats</button>
+        <button data-action="update" class="btn btn-sm btn-success">Update</button>
+        <button data-action="delete" class="btn btn-sm btn-danger">Delete</button>
+      </td>
+
+      <td class="d-lg-none dropdown">
+        <button
+          class="btn float-end pt-0 border border-primary"
+          type="button"
+          data-bs-toggle="dropdown"
+          aria-label="Options menu"
+          aria-expanded="false">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-three-dots-vertical" viewBox="0 0 16 16">
+            <path d="M9.5 13a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0m0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0m0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0"/>
+          </svg>
+        </button>
+
+        <ul class="dropdown-menu">
+          <li>
+            <button data-action="stats" class="btn btn-sm btn-info dropdown-item">Stats</button>
+          </li>
+
+          <li>
+            <button data-action="update" class="btn btn-sm btn-success dropdown-item">Update</button>
+          </li>
+
+          <li>
+            <button data-action="delete" class="btn btn-sm btn-danger dropdown-item">Delete</button>
+          </li>
+        </ul>
+      </td>
+    </tr>
+    {% endfor %}
+  </template>
+
+  <script>
+    import { authService } from '$lib/auth';
+
+    async function waitElement<T>(selector: string): Promise<T> {
+      return new Promise((resolve, _reject) => {
+        const interval = setInterval(() => {
+          const el = document.querySelector(selector);
+
+          if (el) {
+            clearInterval(interval);
+            resolve(el as T);
+          }
+        }, 10);
+      });
+    }
+
+    customElements.whenDefined('wl-database').then(async () => {
+      const wlDatabase: HTMLElement = await waitElement('wl-database');
+      wlDatabase.auth = authService // yes, it's a setter
+
+      wlDatabase.addEventListener('wl-task:completed', () => {
+        const trs: NodeListOf<HTMLTableRowElement> = wlDatabase.querySelectorAll('tbody tr');
+
+        trs.forEach((tr) => {
+          const id = tr.getAttribute('data-id');
+          addListeners(tr, id);
+        });
+      });
+
+      wlDatabase.addEventListener('wl-action:update', (evt: CustomEvent) => {
+        console.log('wl-action:update', evt.detail);
+
+        const id = evt.detail.item.id;
+        const tr: HTMLTableRowElement = wlDatabase.querySelector(`tr[data-id="${id}"]`);
+
+        addListeners(tr, id);
+      });
+
+      wlDatabase.addEventListener('wl-action:create', (evt: CustomEvent) => {
+        console.log('wl-action:create', evt.detail);
+
+        const id = evt.detail.item.id;
+        const tr: HTMLTableRowElement = wlDatabase.querySelector(`tr[data-id="${id}"]`);
+
+        addListeners(tr, id);
+      });
+
+      wlDatabase.addEventListener('wl-action:delete', (evt: CustomEvent) => {
+        console.log('wl-action:delete', evt.detail);
+      });
+    });
+
+    function addListeners(tr: HTMLTableRowElement, id: string) {
+      const buttons = tr.querySelectorAll('button[data-action]');
+      const db = authService.getDb();
+
+      buttons.forEach((btn) => {
+        btn.addEventListener('click', (e) => {
+          const target = e.target as HTMLElement;
+          const action = target.dataset.action;
+
+          switch (action) {
+            case 'stats':
+              console.log('stats', id);
+              break
+
+            case 'update':
+              console.log('update', id);
+              break
+
+            case 'delete':
+              // if (confirm('Are you sure?')) db.delete(record);
+              console.log('delete', id);
+              break
+
+            case 'role':
+              db.query(`UPDATE user SET role = (IF role IS 'admin' { NONE } ELSE { 'admin' }) WHERE id = ${id.toString()};`)
+              break
+
+            default:
+              console.log('Unsuported action', action);
+              break
+          }
+        })
+      });
+    }
+  </script>
+</WlDatabase>
+
+<script>
+  import 'bootstrap/js/dist/dropdown';
+</script>

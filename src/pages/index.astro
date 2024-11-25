@@ -1,0 +1,47 @@
+---
+import { Image } from 'astro:assets'
+
+import BaseLayout from '$layouts/Base.astro'
+
+import logoP from '$images/logo-base-1080_1080.png'
+import logoC from '$images/logo-conselleria-rgb_rojo_cast.png'
+---
+
+<BaseLayout
+  auth={false}
+  admin={false}
+  title="Home"
+  description="Home page">
+  <h1>Welcome to Base</h1>
+
+  <div class="col col-md-6 mx-auto">
+    <Image
+      class="img-fluid ratio ratio-1x1"
+      src={logoP}
+      format={'webp'}
+      widths={[240, 540, 720, logoP.width]}
+      sizes={`(max-width: 360px) 240px, (max-width: 720px) 540px, (max-width: 1600px) 720px, ${logoP.width}px`}
+      alt="Project Logo"/>
+  </div>
+
+  <div class="container">
+    <div class="row">
+      <div class="col-6 col-md-3 col-lg-3 mx-auto">
+        <Image
+          class="img-fluid ratio ratio-16x9"
+          src={logoC}
+          format={'webp'}
+          widths={[240, 540, logoC.width]}
+          sizes={`(max-width: 360px) 240px, (max-width: 1600px) 540px, ${logoC.width}px`}
+          alt="Project Logo"/>
+      </div>
+
+      <div class="col-6 col-md-3 col-lg-3 mx-auto bg-warning">
+      </div>
+
+      <div class="col mx-auto bg-primary">
+        f
+      </div>
+    </div>
+  </div>
+</BaseLayout>

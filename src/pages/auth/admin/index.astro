@@ -1,0 +1,38 @@
+---
+import BaseLayout from '$layouts/Base.astro'
+---
+
+<BaseLayout
+  auth={true}
+  admin={true}
+  title="Admin"
+  description="Admin options">
+
+  <h1>Hello Admin</h1>
+
+  <div class="py-3 col col-lg-6 offset-lg-3">
+    <ul class="list-group text-center">
+      <li class="list-group-item list-group-item-action py-1 px-2">
+        <a href="/auth/admin/users/">
+          Users manager
+        </a>
+      </li>
+
+      <li class="list-group-item list-group-item-action py-1 px-2">
+        <a href="/auth/admin/posts/">
+          Posts manager
+        </a>
+      </li>
+
+      <li class="list-group-item list-group-item-action py-1 px-2">
+        Modules manager
+      </li>
+
+      <li class="list-group-item list-group-item-action py-1 px-2">
+        <a href="/auth/admin/styles/">
+          Styles
+        </a>
+      </li>
+    </ul>
+  </div>
+</BaseLayout>

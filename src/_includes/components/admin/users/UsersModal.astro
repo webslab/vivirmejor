@@ -1,0 +1,137 @@
+---
+interface Props {
+  modalId: string;
+}
+
+const { modalId } = Astro.props;
+---
+
+<div
+  id={modalId}
+  data-bs-backdrop="static"
+  data-bs-keyboard="false"
+  tabindex="-1"
+  aria-labelledby="staticBackdropLabel"
+  aria-hidden="true"
+  class="modal fade">
+  <div class="modal-dialog modal-lg modal-fullscreen-md-down">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2 class="modal-title fs-5" id="staticBackdropLabel">Create User</h2>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+
+      <div class="modal-body row justify-content-center">
+        <div class="col col-lg-8">
+          <form id="form-create-user">
+            <div class="mb-3">
+              <label
+                class="form-label"
+                for="input-name">
+                Name
+              </label>
+
+              <input
+                class="form-control"
+                id="input-name"
+                name="name"
+                type="text" />
+            </div>
+
+            <div class="mb-3">
+              <label
+                class="form-label"
+                for="input-email">
+                Email
+              </label>
+
+              <input
+                class="form-control"
+                id="input-email"
+                name="email"
+                type="email" />
+            </div>
+
+            <div class="mb-3">
+              <label
+                class="form-label"
+                for="input-password">
+                Password
+              </label>
+
+              <input
+                class="form-control"
+                id="input-password"
+                name="password"
+                type="text" />
+            </div>
+          </form>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button
+          class="btn btn-secondary"
+          data-bs-dismiss="modal"
+          type="button">
+          Close
+        </button>
+
+        <button
+          class="btn btn-primary"
+          form="form-create-user"
+          type="submit">
+          Submit
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  import { authService } from '$lib/auth';
+  import type { Surreal } from 'surrealdb';
+
+  const form = document.getElementById('form-create-user') as HTMLFormElement
+
+  form.addEventListener('submit', async (event) => {
+    event.preventDefault();
+
+    const db = await authService.getDb();
+
+    const formData = new FormData(form);
+    const data = Object.fromEntries(formData);
+
+    if (!validate(data)) return;
+    else await createUser(db, data)
+  })
+
+  function validate(data: any) {
+    const { name, email, password } = data
+    if (!name || !email || !password) {
+      alert('Error: Invalid credentials\n- Please fill in all fields')
+      return false
+    }
+
+    return true
+  }
+
+  async function createUser(db: Surreal, data: any) {
+    await db.query(`
+      CREATE user CONTENT {
+        name: $name,
+        email: $email,
+        username: rand::string(8),
+        password: $password
+      }`, data)
+
+    const close = form.closest('.modal').querySelector('[data-bs-dismiss="modal"]') as HTMLButtonElement
+
+    if (confirm(`User created successfully! \n\t copy password?\n ${data.password}`)) {
+      navigator.clipboard.writeText(data.password)
+    }
+
+    form.reset()
+    close.click()
+  }
+</script>
