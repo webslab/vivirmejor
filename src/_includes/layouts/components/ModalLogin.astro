@@ -120,9 +120,7 @@ const { selector } = Astro.props;
 
     if (await authService.signin(username, password)) {
       window.location.reload()
-    }
-
-    alert(`Error: The username or password is incorrect. Maybe both?`)
+    } else alert(`Error: The username or password is incorrect. Maybe both?`)
   })
 </script>
 
