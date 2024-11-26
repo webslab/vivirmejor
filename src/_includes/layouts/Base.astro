@@ -1,10 +1,6 @@
 ---
 import { SITE_TITLE, SITE_DESCRIPTION } from '$lib/consts';
 
-// import { WlSecurity } from '@webslab/shared/components/security';
-// import Security from '$components/utils/Security.astro'
-
-
 import Head from './components/Head.astro'
 import ModalLogin from './components/ModalLogin.astro'
 import Footer from './components/Footer.astro'
@@ -32,7 +28,7 @@ const { auth = true, admin = true, title, description } = Astro.props;
 
   <body>
     <header>
-      <Navbar loginSelector={`#${modalLogin}`} />
+      <Navbar loginSelector={'#' + modalLogin} />
     </header>
 
     <wl-security
@@ -59,6 +55,7 @@ const { auth = true, admin = true, title, description } = Astro.props;
           data-bs-target={"#" + modalLogin}>
           Login
         </a>
+
         <!--
         <a
           aria-label="login to access"

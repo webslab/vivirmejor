@@ -4,10 +4,16 @@ import BaseLayout from '$layouts/Base.astro'
 ---
 
 <style is:global>
-article {
-  min-height: 90vh;
+img {
+  max-width: 100%;
+  height: auto;
 }
 
+article {
+  min-height: 80svh;
+}
+
+article figure img,
 article p img {
   border-radius: 0.25rem;
   box-shadow: 0 0 5px rgba(0, 0, 0, 0.7);
@@ -33,7 +39,7 @@ article p img {
 
   <div class="text-center mb-3">
     <img
-      class="img-fluid rounded shadow"
+      class="rounded shadow"
       loading="lazy"
       width="960"
       height="540"
