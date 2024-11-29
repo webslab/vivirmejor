@@ -1,13 +1,15 @@
 # TODO:
 
-- [ ] editor: add class _img-fluid_ for images
+- [ ] template: ignore some pages
+- [x] editor: add class _img-fluid_ for images
+  - solved by css styles
+- [ ] docker-compose: with a seeded image of the database
 - [ ] docker: configure github package and docker
   - the container should accept db connection info
   - should build for arm64 and amd64
 - [ ] analytic: as asset avoiding wait for db
 - [x] anonymous: manage anonymous users
 
-- [ ] docker-compose: should use a fed image
 - [ ] info: about content needed
   - brand: : 200x40
   - logo: 1:1 : 1080x1080
