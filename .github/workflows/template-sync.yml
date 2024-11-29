@@ -25,6 +25,7 @@ jobs:
       - name: actions-template-sync
         uses: AndreasAugustin/actions-template-sync@v2
         with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
           source_repo_path: webslab/base
           upstream_branch: main # defaults to main
           pr_labels: chore,template,sync # defaults to template_sync
