@@ -26,7 +26,7 @@ article p img {
   title="Blog"
   description="The most recent blog posts">
   <div class="d-flex justify-content-between mb-4">
-    <a class="text-decoration-none text-primary" href="/blog/">
+    <a class="text-decoration-none text-primary" href="/content/blog/">
       <span class="display-6">&larr;</span>
     </a>
 
@@ -59,7 +59,7 @@ article p img {
   const postSlug = new URLSearchParams(globalThis.location.search).get('slug')
 
   if (!postSlug) {
-    globalThis.location.href = '/blog/'
+    globalThis.location.href = '/content/blog/'
   }
 
   authService.isReady.then(async () => {
@@ -71,7 +71,7 @@ article p img {
     const post = rest[0][0]
 
     if (!post) {
-      globalThis.location.href = '/blog/'
+      globalThis.location.href = '/content/blog/'
     } else {
       const article = document.getElementById('article')
       const visits = document.getElementById('post-visits')
@@ -85,7 +85,7 @@ article p img {
       h1.innerText = post.title
       img.src = post.hero
 
-      article.innerHTML = post.content;
+      article.innerHTML = post.content[0];
     }
   })
 
