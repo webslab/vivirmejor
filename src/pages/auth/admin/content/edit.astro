@@ -1,0 +1,188 @@
+---
+import { WlDatabase } from '@webslab/shared/components/database';
+
+import BaseLayout from '$layouts/Base.astro'
+
+import EditorTemplate from '$components/admin/posts/editor/Template.astro'
+---
+
+<style is:global>
+main {
+  min-height: 90svh;
+}
+</style>
+
+<link
+  rel="stylesheet"
+  onload="this.onload=null;this.rel='stylesheet'"
+  href="https://unpkg.com/jodit@4.0.1/es2021/jodit.min.css" />
+
+<BaseLayout
+  auth={true}
+  admin={true}
+  title="Post Editor"
+  description="Posts Editor for the Blog">
+
+  <div
+    id="editor"
+    class="d-flex flex-row justify-content-center align-items-center px-3">
+    <a
+      onclick="history.back()"
+      class="d-none d-lg-block btn btn-outline-primary pt-0"
+      href="#">
+      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-arrow-left" viewBox="0 0 16 16">
+        <path fill-rule="evenodd" d="M15 8a.5.5 0 0 0-.5-.5H2.707l3.147-3.146a.5.5 0 1 0-.708-.708l-4 4a.5.5 0 0 0 0 .708l4 4a.5.5 0 0 0 .708-.708L2.707 8.5H14.5A.5.5 0 0 0 15 8"/>
+      </svg>
+    </a>
+
+    <h1 class="w-100"><span id="table-name">Post</span> Editor</h1>
+
+    <button id="save" type="submit" class="btn btn-primary">Save</button>
+  </div>
+
+  <hr />
+
+  <WlDatabase
+    live={false}
+    target=".container"
+    query=""
+    client:only="lit">
+    <section>
+      <div class="container"></div>
+    </section>
+
+    <EditorTemplate />
+  </WlDatabase>
+
+  <script>
+    import { StringRecordId } from 'surrealdb'
+
+    import { Jodit, joditInit, waitElement } from '$lib/editorUtils'
+    import { authService } from '$lib/auth'
+    import type { Post } from '$lib/types';
+
+    let jodit = undefined;
+    let currentPage = 0
+
+    customElements.whenDefined('wl-database').then(async () => {
+      const wlDatabase: HTMLElement = await waitElement('wl-database');
+      const postId = new URLSearchParams(window.location.search).get('id')
+      const query = `SELECT author.name as authorName, * FROM ${postId};`
+
+      if (!postId || !wlDatabase) {
+        return
+      }
+
+      wlDatabase.query = query
+      wlDatabase.auth = authService
+
+      wlDatabase.addEventListener('wl-task:completed', (evt) => {
+        const db = authService.getDb()
+
+        const add = document.getElementById('add-page')
+        const save = document.getElementById('save')
+        const hero = document.getElementById('hero') as HTMLInputElement
+        const title = document.getElementById('title') as HTMLInputElement
+        const author = document.getElementById('author').dataset;
+        const content = document.getElementById('post-content') as HTMLTextAreaElement
+        const tableName = document.getElementById('table-name')
+        const pagesContainer = document.getElementById('pages-container')
+
+        jodit = joditInit(content)
+
+        const table = evt.detail.result[0][0].id.tb
+        tableName.innerText = table.charAt(0).toUpperCase() + table.slice(1)
+
+        const pages = evt.detail.result[0][0].content
+
+        if (table === 'module') {
+          pagesList(pages)
+          pagesContainer.classList.remove('d-none')
+        }
+
+        save.addEventListener('click', async () => {
+          pages[currentPage] = jodit.currentPlace.editor.innerHTML
+
+          const post = {
+            hero: hero.value,
+            title: title.value,
+            author: new StringRecordId(author.author),
+            content: pages,
+          }
+
+          // TODO: why?
+          // @ts-ignore: check
+          const res = await db.merge(new StringRecordId(postId), post)
+          console.log(res)
+        })
+
+        add.addEventListener('click', (evt) => {
+          const pagesList = document.getElementById('pages-list')
+          const item = document.createElement('li')
+
+          item.classList.add('list-group-item')
+          item.dataset.index = pages.length
+          item.innerHTML = `
+            <span class="btn btn-sm btn-outline-secondary">Page: ${pages.length + 1}</span>
+
+            <button
+              id="del-page"
+              class="btn btn-sm btn-outline-danger mt-0 float-end">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-x-lg" viewBox="0 0 16 16">
+                <path d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8z"/>
+              </svg>
+            </button>`
+
+          addItemListener(item, pages.length, pages)
+
+          pagesList.insertBefore(item, add.parentNode)
+        })
+      })
+
+      function addItemListener(item, index, pages: string[]) {
+        const del = item.querySelector('#del-page')
+        const span = item.querySelector('span')
+
+        span.addEventListener('click', () => {
+          const hasChanged = jodit.currentPlace.editor.innerHTML !== pages[currentPage]
+
+          if (pages[currentPage] && hasChanged) {
+            alert('save changes before switching pages')
+            return;
+          }
+
+          jodit.currentPlace.editor.innerHTML = pages[index] || ''
+          currentPage = parseInt(item.dataset.index)
+        })
+
+        del.addEventListener('click', (evt) => {
+          if (pages.length === 1) {
+            alert('you must have at least one page')
+            return;
+          }
+
+          if (index !== currentPage) {
+            alert('you must delete the current page')
+            return;
+          }
+
+          console.log('del', index)
+          // evt.stopPropagation()
+          // pages.splice(index, 1)
+          // const pagesList = document.getElementById('pages-list')
+          // pagesList.removeChild(item)
+          // pagesList(pages)
+        })
+      }
+
+      function pagesList(pages: string[]) {
+        const pagesList = document.getElementById('pages-list')
+        const items = pagesList.querySelectorAll('li')
+
+        items.forEach((item, index) => {
+          if (item.dataset.index) addItemListener(item, index, pages)
+        })
+      }
+    })
+  </script>
+</BaseLayout>

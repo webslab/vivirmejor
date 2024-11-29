@@ -13,6 +13,7 @@ import "jodit/esm/plugins/class-span/class-span.js";
 import "jodit/esm/plugins/add-new-line/add-new-line.js";
 
 import { Jodit } from "jodit/esm/index.js";
+export { Jodit };
 
 export function waitElement<T>(selector: string): Promise<T> {
 	return new Promise((resolve, _reject) => {

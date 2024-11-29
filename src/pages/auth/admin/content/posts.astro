@@ -23,12 +23,12 @@ import PostsTable from '$components/admin/posts/PostsTable.astro'
     <a
       type="button"
       class="d-none d-lg-block btn btn-primary flex-shrink-1"
-      href="/auth/admin/posts/create/">Create</a>
+      href="/auth/admin/content/create/?table=post">Create</a>
   </div>
 
   <hr />
 
   <div class="px-xl-2">
-    <PostsTable />
+    <PostsTable type="post" />
   </div>
 </BaseLayout>

@@ -1,6 +1,8 @@
 ---
 import { WlDatabase } from '@webslab/shared/components/database';
 import PlaceHolder from './PostsTablePlace.astro'
+
+const { type = 'post' } = Astro.props;
 ---
 
 <WlDatabase
@@ -9,7 +11,7 @@ import PlaceHolder from './PostsTablePlace.astro'
   query={`SELECT
     time::format(publish, '%d-%m-%Y') as publish_fmt,
     publish < time::now() AND !draft as published,
-    author.name as author, * FROM post ORDER BY publish DESC;`}
+    author.name as author, * FROM ${type} ORDER BY publish DESC;`}
   client:only="lit">
 
   <PlaceHolder />
@@ -31,7 +33,7 @@ import PlaceHolder from './PostsTablePlace.astro'
       <td class="d-none d-lg-table-cell text-center">
         <button data-action="stats" class="btn btn-sm btn-info">stats</button>
         <!-- <button data-action="update" class="btn btn-sm btn-success">update</button> -->
-        <a href="/auth/admin/posts/edit?id={{ item.id }}" class="btn btn-sm btn-success">update</a>
+        <a href="/auth/admin/content/edit?id={{ item.id }}" class="btn btn-sm btn-success">update</a>
         <button data-action="delete" class="btn btn-sm btn-danger">delete</button>
       </td>
 
@@ -56,7 +58,7 @@ import PlaceHolder from './PostsTablePlace.astro'
             <!-- <button data-action="update" class="btn btn-sm btn-success dropdown-item">Update</button> -->
             <a
               class="btn btn-sm btn-success dropdown-item"
-              href="/auth/admin/posts/edit?id={{ item.id }}">
+              href="/auth/admin/content/edit?id={{ item.id }}">
               update
             </a>
           </li>
