@@ -68,7 +68,7 @@
       const res = await db.create(table, post)
 
       // some kind of alert or redirect
-      window.location.href = `/auth/admin/${table}/edit?id=${res[0].id.toString()}`
+      window.location.href = `/auth/admin/content/edit?id=${res[0].id.toString()}`
     })
   })
 </script>
