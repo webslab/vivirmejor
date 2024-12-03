@@ -4,8 +4,7 @@ import { Image } from 'astro:assets'
 
 import BaseLayout from '$layouts/Base.astro'
 
-// import teamMain from '$images/about_team-group.webp'
-import teamMain from '$images/about_team-group_cartoon.png'
+import teamMain from '$images/about/about_team-group_cartoon.png'
 
 const groupOne = await getCollection('members', ({ data }) => {
   return data.group === 1;
@@ -65,7 +64,7 @@ img:hover {
       <div class="col-sm-12 col-lg-4 text-center">
         <Image
           class="border border-2 rounded-circle"
-          src="https://s.gravatar.com/avatar/310cdbc78789720313000310fbca4bca?s=480&r=pg&d=https%3A%2F%2Fcdn.auth0.com%2Favatars%2Fbm.png"
+          src="https://i0.wp.com/cdn.auth0.com/avatars/bm.png?ssl=1"
           format={'webp'}
           width={160}
           height={160}

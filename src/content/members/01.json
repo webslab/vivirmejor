@@ -4,5 +4,5 @@
 	"name": "John Doe",
 	"position": "President",
 	"department": "Departamento de Personalidad, Evaluación y Tratamientos Psicológicos – UVEG; Miembro red CIBERobn",
-	"photo": "https://s.gravatar.com/avatar/310cdbc78789720313000310fbca4bca?s=480&r=pg&d=https%3A%2F%2Fcdn.auth0.com%2Favatars%2Fjd.png"
+	"photo": "../../_includes/images/about/jd.png"
 }
