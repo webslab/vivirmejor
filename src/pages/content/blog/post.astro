@@ -104,6 +104,9 @@ article p img {
           `,
           { user: user.id, slug: postSlug }, // TODO: getUser() should return anonymous user
         )
+
+        const likes = document.getElementById('post-likes')!
+        likes.innerText = `Likes: ${parseInt(likes.innerText.split(' ')[1]) + 1}`
       } catch (error: unknown) {
         if (error!.toString().includes('likes_unique')) {
           alert('You have already liked this post')
@@ -111,8 +114,5 @@ article p img {
           console.log(error)
         }
       }
-
-      const likes = document.getElementById('post-likes')!
-      likes.innerText = `Likes: ${parseInt(likes.innerText.split(' ')[1]) + 1}`
     })
 </script>
