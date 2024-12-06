@@ -115,7 +115,7 @@ import PlaceHolder from './UsersTablePlace.astro'
               break
 
             case 'update':
-              console.log('update', id);
+              location.href = `/auth/admin/users/edit?id=${id}`;
               break
 
             case 'delete':

@@ -24,19 +24,23 @@ import { WlDatabase } from '@webslab/shared/components/database';
 
   <template slot="template" is:raw>
     {% for item in result[0] %}
-    <div class="form-check">
-      <input
-        name="module"
-        class="form-check-input"
-        id="{{ item.slug }}"
-        value="{{ item.id }}"
-        type="checkbox" />
+    <ul class="list-group list-group-horizontal mb-1">
+      <li class="list-group-item">
+        <input
+          name="module"
+          class="form-check-input"
+          id="{{ item.slug }}"
+          value="{{ item.id }}"
+          type="checkbox" />
+      </li>
 
-      <label class="form-check-label" for="{{ item.slug }}">
-        {{ item.title }}
-        <span class="d-none d-md-inline"> - {{ item.author }}</span>
-      </label>
-    </div>
+      <li class="list-group-item w-100">
+        <label class="form-check-label" for="{{ item.slug }}">
+          {{ item.title }}
+          <span class="d-none d-md-inline"> - {{ item.author }}</span>
+        </label>
+      </li>
+    </ul>
     {% endfor %}
   </template>
 
