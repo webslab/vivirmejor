@@ -55,11 +55,12 @@ main {
   </WlDatabase>
 
   <script>
+    import type { Post } from '$lib/types';
     import { StringRecordId } from 'surrealdb'
 
-    import { Jodit, joditInit, waitElement } from '$lib/editorUtils'
+    import { Jodit, joditInit } from '$lib/editorUtils'
+    import { waitElement } from '$lib/utils'
     import { authService } from '$lib/auth'
-    import type { Post } from '$lib/types';
 
     let jodit = undefined;
     let currentPage = 0

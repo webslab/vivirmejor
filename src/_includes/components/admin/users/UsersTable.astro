@@ -62,19 +62,7 @@ import PlaceHolder from './UsersTablePlace.astro'
 
   <script>
     import { authService } from '$lib/auth';
-
-    async function waitElement<T>(selector: string): Promise<T> {
-      return new Promise((resolve, _reject) => {
-        const interval = setInterval(() => {
-          const el = document.querySelector(selector);
-
-          if (el) {
-            clearInterval(interval);
-            resolve(el as T);
-          }
-        }, 10);
-      });
-    }
+    import { waitElement } from '$lib/utils';
 
     customElements.whenDefined('wl-database').then(async () => {
       const wlDatabase: HTMLElement = await waitElement('wl-database');

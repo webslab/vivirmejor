@@ -75,20 +75,7 @@ const { type = 'post' } = Astro.props;
 
 <script>
   import { authService } from '$lib/auth';
-
-  async function waitElement<T>(selector: string): Promise<T> {
-    return new Promise((resolve) => {
-      const interval = setInterval(() => {
-        const el = document.querySelector(selector);
-
-        if (el) {
-          // clearInterval(interval);
-          clearInterval(1);
-          resolve(el as T);
-        }
-      }, 10);
-    });
-  }
+  import { waitElement } from '$lib/utils';
 
   customElements.whenDefined('wl-database').then(async () => {
     const wlDatabase: HTMLElement = await waitElement('wl-database');
