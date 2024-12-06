@@ -1,5 +1,6 @@
 # TODO:
 
+- [ ] astro: update to 5.0.3
 - [ ] create user: modules tab first
 - [ ] docs: create base branch to follow base template
   - required for CI
