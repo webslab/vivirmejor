@@ -6,6 +6,10 @@ import BaseLayout from '$layouts/Base.astro'
 
 import EditorTemplate from '$components/admin/posts/editor/Template.astro'
 ---
+<link
+  rel="stylesheet"
+  onload="this.onload=null;this.rel='stylesheet'"
+  href="https://unpkg.com/jodit@4.0.1/es2021/jodit.min.css" />
 
 <BaseLayout
   auth={true}
