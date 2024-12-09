@@ -1,44 +1,44 @@
-// import 'jodit/esm/plugins/index.js';
-import "jodit/esm/plugins/hr/hr.js";
-// import 'jodit/esm/plugins/iframe/iframe.js'; // ??
-import "jodit/esm/plugins/video/video.js";
-import "jodit/esm/plugins/source/source.js";
-// import "jodit/esm/plugins/mobile/mobile.js";
-import "jodit/esm/plugins/preview/preview.js";
-import "jodit/esm/plugins/resizer/resizer.js";
-import "jodit/esm/plugins/justify/justify.js";
-import "jodit/esm/plugins/fullsize/fullsize.js";
-import "jodit/esm/plugins/class-span/class-span.js";
-// import 'jodit/esm/plugins/format-block/format-block.js'; // ??
-import "jodit/esm/plugins/add-new-line/add-new-line.js";
+import { Jodit } from "jodit/es2021/jodit.min.js";
+import { WEBSLAB_PROJECT, WEBSLAB_TOKEN } from "./consts.ts";
 
-import { Jodit } from "jodit/esm/index.js";
 export { Jodit };
 
 export function joditInit(selector: HTMLElement): Jodit {
-	const theme = "dark";
+	const storedTheme = localStorage.getItem("theme");
+
+	const theme = storedTheme === "auto" ? "light" : storedTheme || "light";
 	const language = navigator.language || "en";
 
 	const config = {
 		theme,
+		language,
+
+		uploader: {
+			url: "/filefind/index.php?action=fileUpload",
+			headers: {
+				"X-WEBSLAB-Project": WEBSLAB_PROJECT,
+				"X-WEBSLAB-Token": WEBSLAB_TOKEN, // authService.getToken(),
+			},
+			// prepareData: (formdata) => {
+			// 	formdata.append("name", "Some parameter"); // $_POST['name'] on server
+			// },
+		},
+
+		filebrowser: {
+			ajax: {
+				url: "/filefind/index.php",
+				headers: {
+					"X-WEBSLAB-Project": WEBSLAB_PROJECT,
+					"X-WEBSLAB-Token": WEBSLAB_TOKEN, // authService.getToken(),
+				},
+			},
+		},
+
 		height: 550,
 		minHeight: 400,
-		language,
-		// disablePlugins: ['color', 'font', 'about', ''],
+
 		disablePlugins: ["color", "font", "about", "mobile"],
-
-		// buttons: [
-		//   'source', '|',
-		//   'bold', 'strikethrough', 'underline', 'italic', '|',
-		// ],
-
-		// showGutter: true,
-		// mode: 'ace/mode/html',
-		// wrap: true,
 		beautifyHTML: false,
-		// highlightActiveLine: true,
-
-		// buttons: 'source,|,bold,strikethrough,underline,italic,|,ul,ol,|,outdent,indent,|,font,fontsize,brush,paragraph,|,image,video,table,link,|,align,undo,redo,\n,selectall,cut,copy,paste,copyformat,|,hr,symbol,fullsize,print,about',
 
 		controls: {
 			classSpan: {
