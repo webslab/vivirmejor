@@ -6,13 +6,23 @@ import purgecss from "astro-purgecss";
 import sitemap from "@astrojs/sitemap";
 
 export default defineConfig({
-	site: "https://base.kennycallado.dev",
+	site: "https://base.lab.kennycallado.dev",
 	server: {
 		port: 3000,
 	},
 	vite: {
 		esbuild: {
 			target: "es2021",
+		},
+		server: {
+			proxy: {
+				"/filefind": {
+					target: "http://localhost:8000",
+					changeOrigin: true,
+					secure: false,
+				},
+			},
+			cors: false,
 		},
 		build: {
 			rollupOptions: {
