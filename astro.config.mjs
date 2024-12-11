@@ -10,10 +10,12 @@ export default defineConfig({
 	server: {
 		port: 3000,
 	},
+
 	vite: {
 		esbuild: {
 			target: "es2021",
 		},
+
 		server: {
 			proxy: {
 				"/filefind": {
@@ -24,6 +26,7 @@ export default defineConfig({
 			},
 			cors: false,
 		},
+
 		build: {
 			rollupOptions: {
 				external: [
@@ -32,16 +35,20 @@ export default defineConfig({
 			},
 		},
 	},
+
 	image: {
 		service: sharpImageService(),
 		remotePatterns: [{ protocol: "https" }],
 	},
+
 	integrations: [
 		lit(),
 		sitemap(),
 		purgecss({
 			keyframes: false,
+
 			safelist: {
+				standard: [/^jodit/],
 				greedy: [/*astro*/],
 				deep: [
 					/dropdown-menu-end/,
