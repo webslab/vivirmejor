@@ -102,15 +102,15 @@ deno task build
 
 ```bash
 # arm
-podman build --rm -t webslab/base:v0.2.5-arm64 --platform=linux/arm64 .
+podman build --rm -t webslab/<project>:v0.X.X-arm64 --platform=linux/arm64 .
 
 # wip
-podman build --rm -t webslab/base:latest --platform=linux/arm64,linux/amd64 .
-podman build --rm -t webslab/base:latest .
+podman build --rm -t webslab/<project>:latest --platform=linux/arm64,linux/amd64 .
+podman build --rm -t webslab/<project>:latest .
 ```
 
 ```sh
-podman push webslab/base:v0.2.5-arm64
+podman push webslab/<project>:v0.X.X-arm64
 ```
 
 ```sh
