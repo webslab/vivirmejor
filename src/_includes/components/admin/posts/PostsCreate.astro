@@ -39,8 +39,8 @@
 <script>
   import { StringRecordId } from 'surrealdb'
 
+  import { joditInit } from '$lib/editor'
   import { authService } from '$lib/auth'
-  import { joditInit } from '$lib/editorUtils'
 
   authService.isReady.then(() => {
     const db = authService.getDb()

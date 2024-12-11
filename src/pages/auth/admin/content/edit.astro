@@ -47,8 +47,8 @@ import EditorTemplate from '$components/admin/posts/editor/Template.astro'
     <EditorTemplate />
 
     <script>
+      import { joditInit } from '$lib/editor'
       import { initWlDatabase } from '$lib/utils'
-      import { joditInit } from '$lib/editorUtils'
 
       const postId = new URLSearchParams(window.location.search).get('id')
       const query = `SELECT author.name as authorName, * FROM ${postId};`
@@ -62,9 +62,9 @@ import EditorTemplate from '$components/admin/posts/editor/Template.astro'
   <script>
     import { StringRecordId } from 'surrealdb'
 
+    import { joditInit } from '$lib/editor'
     import { authService } from '$lib/auth'
     import { getWlDatabase } from '$lib/utils'
-    import { joditInit } from '$lib/editorUtils'
 
     const postId = new URLSearchParams(window.location.search).get('id')
     let currentPage = 0

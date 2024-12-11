@@ -36,6 +36,7 @@ export function joditInit(selector: HTMLElement): Jodit {
 
 		height: 550,
 		minHeight: 400,
+		// toolbarAdaptive: false,
 
 		disablePlugins: ["color", "font", "about", "mobile"],
 		beautifyHTML: false,
