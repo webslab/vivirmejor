@@ -1,9 +1,9 @@
-# FROM denoland/deno:distroless-2.0.2 AS build
+# FROM denoland/deno:alpine AS build
 #
 # COPY . /app
 #
 # WORKDIR /app
-# RUN deno install
+# RUN deno install --allow-scripts=npm:sharp,npm:parcel,npm:@parcel/watcher
 # RUN deno task build
 
 FROM nginx:alpine
