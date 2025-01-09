@@ -1,10 +1,12 @@
 {
 	"version": "0.2.6",
+	"name": "base",
 	"tasks": {
 		"dev": "astro dev",
 		"astro": "astro",
 		"build": "astro build",
-		"preview": "astro preview"
+		"preview": "astro preview",
+		"build:images": "deno run -A ./scripts/build-images.ts"
 	},
 	"imports": {
 		"$components": "./src/_includes/components/*",
