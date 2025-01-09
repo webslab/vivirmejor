@@ -42,6 +42,17 @@
           src="{{ item.hero }}" />
       </div>
 
+      <div class="mb-3">
+        <label for="publish" class="form-label">Publish date</label>
+
+        <input
+          type="date"
+          class="form-control"
+          id="publish"
+          name="publish"
+          value="{{ item.publish_fmt }}" />
+      </div>
+
       <div
         id="pages-container"
         class="d-none mb-3">

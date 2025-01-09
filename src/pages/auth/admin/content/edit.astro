@@ -48,7 +48,7 @@ import EditorTemplate from '$components/admin/posts/editor/Template.astro'
       import { initWlDatabase } from '$lib/utils'
 
       const postId = new URLSearchParams(window.location.search).get('id')
-      const query = `SELECT author.name as authorName, * FROM ${postId};`
+      const query = `SELECT time::format(publish, '%Y-%m-%d') as publish_fmt, author.name as authorName, * FROM ${postId};`
 
       // if (!postId) { return }
 
@@ -75,6 +75,7 @@ import EditorTemplate from '$components/admin/posts/editor/Template.astro'
         const hero = document.getElementById('hero') as HTMLInputElement
         const title = document.getElementById('title') as HTMLInputElement
         const author = document.getElementById('author').dataset;
+        const publish = document.getElementById('publish') as HTMLInputElement
         const content = document.getElementById('post-content') as HTMLTextAreaElement
         const tableName = document.getElementById('table-name')
         const pagesContainer = document.getElementById('pages-container')
@@ -99,6 +100,7 @@ import EditorTemplate from '$components/admin/posts/editor/Template.astro'
             title: title.value,
             author: new StringRecordId(author.author),
             content: pages,
+            publish: new Date(publish.value)
           }
 
           // TODO: why?
