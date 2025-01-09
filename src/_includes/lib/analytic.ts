@@ -11,15 +11,15 @@ authService.isReady.then(() => {
 	}
 
 	const [pageNav] = performance.getEntriesByType("navigation");
-	// @ts-ignore: foo
+	// @ts-ignore: NOTE:
 	const totalLookupTime = pageNav.domainLookupEnd - pageNav.domainLookupStart;
-	// @ts-ignore: foo
+	// @ts-ignore: NOTE:
 	const connectionTime = pageNav.connectEnd - pageNav.connectStart;
 
 	let tlsTime = 0; // <-- Assume 0 to start with
-	// @ts-ignore: foo
+	// @ts-ignore: NOTE:
 	if (pageNav.secureConnectionStart > 0) {
-		// @ts-ignore: foo
+		// @ts-ignore: NOTE:
 		tlsTime = pageNav.connectEnd - pageNav.secureConnectionStart;
 	}
 
@@ -35,14 +35,14 @@ authService.isReady.then(() => {
 		navigator: {
 			lang: navigator.language,
 			agent: navigator.userAgent,
-			// @ts-ignore: foo
+			// @ts-ignore: NOTE:
 			platf: navigator.platform,
-			// @ts-ignore: foo
+			// @ts-ignore: NOTE:
 			other: navigator.userAgentData
 				? {
-					// @ts-ignore: foo
+					// @ts-ignore: NOTE:
 					brands: [navigator.userAgentData.brands[0]],
-					// @ts-ignore: foo
+					// @ts-ignore: NOTE:
 					mobile: navigator.userAgentData.mobile,
 				}
 				: null,
