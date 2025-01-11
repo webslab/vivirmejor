@@ -1,12 +1,13 @@
 // @ts-check
 import { defineConfig, sharpImageService } from "astro/config";
+import { WEBSLAB_DOMAIN, WEBSLAB_PROJECT } from "./src/_includes/lib/consts.ts";
 
 import lit from "@astrojs/lit";
 import purgecss from "astro-purgecss";
 import sitemap from "@astrojs/sitemap";
 
 export default defineConfig({
-	site: "https://base.lab.kennycallado.dev",
+	site: `https://${WEBSLAB_PROJECT}.${WEBSLAB_DOMAIN}`,
 	server: {
 		port: 3000,
 	},
