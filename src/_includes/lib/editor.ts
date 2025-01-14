@@ -41,6 +41,8 @@ export function joditInit(selector: HTMLElement): Jodit {
 		disablePlugins: ["color", "font", "about", "mobile"],
 		beautifyHTML: false,
 
+		mediaInFakeBlock: false, // TODO: Check it works fine with images
+
 		controls: {
 			classSpan: {
 				list: {
