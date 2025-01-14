@@ -7,19 +7,11 @@ export const SITE_DESCRIPTION = "Welcome to Base!";
 
 // TODO: Change to production URL
 export const DB = {
-	url: "ws://localhost:8000/",
+	// url: "ws://localhost:8000/",
+	url: `wss://surreal.${WEBSLAB_DOMAIN}/`,
 	config: {
 		access: "user",
 		database: WEBSLAB_PROJECT,
 		namespace: "webslab",
 	},
 };
-
-// export const DB: DbConfig = {
-// 	url: 'https://db.lab.kennycallado.dev/',
-// 	config: {
-// 		access: 'user',
-// 		database: 'webslab',
-// 		namespace: 'base',
-// 	},
-// }
