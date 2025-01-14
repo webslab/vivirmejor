@@ -1,5 +1,6 @@
 ---
 import '$styles/editor.scss'
+import HeroPicker from './HeroPicker.astro'
 ---
 
 <div class="row">
@@ -26,9 +27,7 @@ import '$styles/editor.scss'
     </div>
 
     <div class="mb-3">
-      <label for="hero" class="form-label">Hero Image</label>
-      <input type="text" class="form-control" id="hero" />
-      <!-- <input type="file" class="form-control" id="hero" /> -->
+      <HeroPicker id="hero" />
     </div>
 
     <img id="hero-preview" class="img-fluid rounded" />

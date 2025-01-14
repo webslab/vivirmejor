@@ -1,0 +1,78 @@
+---
+import HeroModal from './HeroModal.astro'
+
+const { class: className, id, current, inputId } = Astro.props
+---
+
+<div id={id} class:list={className}>
+  <label for={inputId} class="form-label">Hero Image</label>
+
+  <div class="input-group mb-3">
+    <input class="form-control" type="text" id={inputId} value={current} />
+    <button class="btn btn-outline-primary" type="button" id="hero-picker">Button</button>
+  </div>
+
+  <img id="hero-preview" class="img-fluid mt-2 rounded" loading="lazy" src={current} />
+</div>
+
+<HeroModal />
+
+<script>
+  import * as bootstrap from 'bootstrap'
+  import { WEBSLAB_DOMAIN, WEBSLAB_PROJECT, WEBSLAB_TOKEN } from '$lib/consts'
+
+  const heroPreview = document.getElementById('hero-preview') as HTMLImageElement
+  const heroPicker = document.getElementById('hero-picker') as HTMLButton
+  const heroModal = document.getElementById('modal-hero')
+  const bsModal = new bootstrap.Modal(heroModal)
+
+  heroModal.addEventListener('hero:modal:data', ({ detail }) => {
+    hero.value = detail
+    heroPreview.src = detail
+
+    bsModal.hide()
+  })
+
+  heroPicker.addEventListener('click', async () => {
+    const response = await fetch('/filefind/index.php?action=files', {
+      method: 'GET',
+      headers: {
+        'Accept': 'application/json',
+        'X-WEBSLAB-Project': WEBSLAB_PROJECT,
+        'X-WEBSLAB-Token': WEBSLAB_TOKEN, // authService.getToken(),
+      }
+    })
+
+    response
+      .json()
+      .then(({ data }) => {
+        const heroBody = heroModal.querySelector('.modal-body')
+        const heroSelect = heroBody.querySelector('select')
+        const baseurl: string = data.sources[0].baseurl
+        const files: object[] = data.sources[0].files
+
+        const values: string[] = []
+
+        files.forEach((file: object) => {
+          if (file.type === 'image') {
+            values.push(`https://${WEBSLAB_PROJECT}.${WEBSLAB_DOMAIN}${baseurl}${file.name}`)
+          }
+        })
+
+        // clear the select
+        heroSelect.innerHTML = ''
+
+        values.forEach((value, index) => {
+          const option = document.createElement('option')
+
+          option.value = value
+          option.innerText = files[index].name
+
+          heroSelect.appendChild(option)
+        })
+
+        heroBody.innerHTML = heroSelect.outerHTML
+        bsModal.show()
+      })
+  })
+</script>
