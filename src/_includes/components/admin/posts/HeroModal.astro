@@ -24,24 +24,6 @@
     </div>
   </div>
 
-  <script>
-    const heroModal = document.getElementById('modal-hero')
-    const close = heroModal.querySelector('.btn-secondary')
-    const save = heroModal.querySelector('.btn-primary')
-
-    save.addEventListener('click', () => {
-      const select = heroModal.querySelector('select')
-
-      if (select.value) {
-        const event = new CustomEvent('hero:modal:data', { detail: select.value })
-        heroModal.dispatchEvent(event)
-
-        close.click()
-      }
-    })
-  </script>
-</div>
-
 <script>
   import 'bootstrap/js/dist/modal'
 </script>
