@@ -64,11 +64,14 @@ import HeroPicker from '$components/admin/posts/HeroPicker.astro'
     import { joditInit } from '$lib/editor'
     import { authService } from '$lib/auth'
     import { getWlDatabase } from '$lib/utils'
+    import { WEBSLAB_DOMAIN, WEBSLAB_PROJECT, WEBSLAB_TOKEN } from '$lib/consts'
 
     const postId = new URLSearchParams(window.location.search).get('id')
     let currentPage = 0
 
     getWlDatabase().then(async (wlDatabase) => {
+      import('$lib/hero.ts')
+
       wlDatabase.addEventListener('wl-task:completed', (evt) => {
         const db = authService.getDb()
 

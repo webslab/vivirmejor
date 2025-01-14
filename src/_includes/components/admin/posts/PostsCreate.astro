@@ -41,6 +41,7 @@ import HeroPicker from './HeroPicker.astro'
   import { authService } from '$lib/auth'
 
   authService.isReady.then(() => {
+    import('$lib/hero.ts')
     const db = authService.getDb()
 
     const hero = document.getElementById('hero')
