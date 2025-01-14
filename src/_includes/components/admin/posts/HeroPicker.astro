@@ -9,7 +9,14 @@ const { class: className, id, current, inputId } = Astro.props
 
   <div class="input-group mb-3">
     <input class="form-control" type="text" id={inputId} value={current} />
-    <button class="btn btn-outline-primary" type="button" id="hero-picker">Button</button>
+
+    <button
+      id="hero-picker"
+      data-bs-toggle="modal"
+      data-bs-target="#modal-hero"
+      class="btn btn-outline-primary"
+      type="button"
+    >Button</button>
   </div>
 
   <img id="hero-preview" class="img-fluid mt-2 rounded" loading="lazy" src={current} />
@@ -18,19 +25,15 @@ const { class: className, id, current, inputId } = Astro.props
 <HeroModal />
 
 <script>
-  import * as bootstrap from 'bootstrap'
   import { WEBSLAB_DOMAIN, WEBSLAB_PROJECT, WEBSLAB_TOKEN } from '$lib/consts'
 
   const heroPreview = document.getElementById('hero-preview') as HTMLImageElement
   const heroPicker = document.getElementById('hero-picker') as HTMLButton
   const heroModal = document.getElementById('modal-hero')
-  const bsModal = new bootstrap.Modal(heroModal)
 
   heroModal.addEventListener('hero:modal:data', ({ detail }) => {
     hero.value = detail
     heroPreview.src = detail
-
-    bsModal.hide()
   })
 
   heroPicker.addEventListener('click', async () => {
@@ -72,7 +75,6 @@ const { class: className, id, current, inputId } = Astro.props
         })
 
         heroBody.innerHTML = heroSelect.outerHTML
-        bsModal.show()
       })
   })
 </script>
