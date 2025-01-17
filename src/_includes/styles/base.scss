@@ -39,6 +39,18 @@ $font-family-sans-serif:
   visibility: hidden;
 }
 
+jodit:has(.article-video) {
+  width: 100% !important;
+  height: 100% !important;
+}
+
+.article-video {
+  display: inline-block !important;
+  min-width: 100% !important;
+  max-width: 100%;
+  aspect-ratio: 16/9;
+}
+
 strong,
 b,
 .fw-bold {
