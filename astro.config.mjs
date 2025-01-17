@@ -49,7 +49,7 @@ export default defineConfig({
 			keyframes: false,
 
 			safelist: {
-				standard: [/^jodit/],
+				standard: [/^jodit/, /article-video/],
 				greedy: [/*astro*/],
 				deep: [
 					/dropdown-menu-end/,
