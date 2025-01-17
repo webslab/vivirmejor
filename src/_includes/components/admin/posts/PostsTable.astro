@@ -112,10 +112,14 @@ const { type = 'post' } = Astro.props;
 
           case 'delete':
             console.log('delete', id);
+
+            if (window.confirm('Are you sure you want to delete this post?'))
+              db.query(`DELETE type::record($postId);`, {postId: id}).then(() => tr.remove());
             break;
 
           case 'draft':
             console.log('draft', id);
+
             db.query(`UPDATE type::record($postId) SET draft = !draft;`, {postId: id})
               .then((res) => {
                 // update the target element
@@ -128,7 +132,7 @@ const { type = 'post' } = Astro.props;
             break;
 
           default:
-            console.log('unknown action', action);
+            console.log('unknown action: ', action);
             break;
         }
       });
