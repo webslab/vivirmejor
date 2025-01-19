@@ -1,15 +1,16 @@
 import { Jodit } from "jodit/es2021/jodit.min.js";
+
+import { ContentObserver } from "./plugins.ts";
 import { WEBSLAB_PROJECT, WEBSLAB_TOKEN } from "./consts.ts";
 
-export { Jodit };
-
 export function joditInit(selector: HTMLElement): Jodit {
-	const storedTheme = localStorage.getItem("theme");
-
-	const theme = storedTheme === "auto" ? "light" : storedTheme || "light";
 	const language = navigator.language || "en";
+	const storedTheme = localStorage.getItem("theme");
+	const theme = storedTheme === "auto" ? "light" : storedTheme || "light";
 
-	const config = {
+	Jodit.plugins.add("videoListener", ContentObserver);
+
+	return Jodit.make(selector, {
 		theme,
 		language,
 
@@ -34,7 +35,7 @@ export function joditInit(selector: HTMLElement): Jodit {
 			},
 		},
 
-		height: 550,
+		// height: 550,
 		minHeight: 400,
 		// toolbarAdaptive: false,
 
@@ -52,7 +53,5 @@ export function joditInit(selector: HTMLElement): Jodit {
 				},
 			},
 		},
-	};
-
-	return Jodit.make(selector, config);
+	});
 }

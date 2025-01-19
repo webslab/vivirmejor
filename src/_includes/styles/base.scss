@@ -39,16 +39,32 @@ $font-family-sans-serif:
   visibility: hidden;
 }
 
+// just inside editor
+.jodit-wysiwyg p:has(> img) {
+  margin-inline: auto;
+  max-width: 720px;
+
+  border-radius: 0.25rem;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.7);
+}
+
 jodit:has(.article-video) {
+  display: block;
+
   width: 100% !important;
-  height: 100% !important;
+  max-width: 720px;
+
+  margin-inline: auto;
 }
 
 .article-video {
   display: inline-block !important;
+
   min-width: 100% !important;
-  max-width: 100%;
   aspect-ratio: 16/9;
+
+  border-radius: 0.25rem;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.7);
 }
 
 strong,
