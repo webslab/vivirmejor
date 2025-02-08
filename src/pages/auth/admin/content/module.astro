@@ -1,13 +1,18 @@
 ---
 import BaseLayout from '$layouts/Base.astro'
-import PostsTable from '$components/admin/posts/PostsTable.astro'
+
+import CreateModal from '$components/admin/content/CreateModal.astro'
+import ContentTable from '$components/admin/content/Table.astro'
+
+const table = Astro.url.pathname.split('/').filter(n => n).pop();
+const modalId = `amdin-content-create-modal`;
 ---
 
 <BaseLayout
   auth={true}
   admin={true}
-  title="Modules List"
-  description="Modules Manager">
+  title={table + " List"}
+  description={table + "Manager"}>
 
   <div class="d-flex flex-row justify-content-center align-items-center px-3">
     <a
@@ -18,17 +23,20 @@ import PostsTable from '$components/admin/posts/PostsTable.astro'
       </svg>
     </a>
 
-    <h1 class="w-100">Modules Manager</h1>
+    <h1 class="w-100 text-capitalize">{table} manager</h1>
 
-    <a
+    <button
       type="button"
-      class="d-none d-lg-block btn btn-primary flex-shrink-1"
-      href="/auth/admin/content/create/?table=module">Create</a>
+      class="btn btn-primary d-none d-lg-block flex-shrink-1"
+      data-bs-toggle="modal"
+      data-bs-target={`#${modalId}`}>Create</button>
   </div>
 
   <hr />
 
   <div class="px-xl-2">
-    <PostsTable type="module" />
+    <ContentTable table={table} />
   </div>
+
+  <CreateModal table="module" modalId={modalId} />
 </BaseLayout>

@@ -1,17 +1,21 @@
 ---
 import { WlDatabase } from '@webslab/shared/components/database';
-import PlaceHolder from './PostsTablePlace.astro'
+import PlaceHolder from './TableHolder.astro'
 
-const { type = 'post' } = Astro.props;
+interface Props {
+	table: string;
+}
+
+const { table } = Astro.props;
 ---
 
 <WlDatabase
-  live={false}
+  live={true}
   target="tbody"
   query={`SELECT
     time::format(publish, '%d-%m-%Y') as publish_fmt,
     publish < time::now() AND !draft as published,
-    author.name as author, * FROM ${type} ORDER BY publish DESC;`}
+    author.name as author, * FROM ${table} ORDER BY publish DESC;`}
   client:only="lit">
 
   <PlaceHolder />
@@ -19,7 +23,7 @@ const { type = 'post' } = Astro.props;
   <template slot="template" is:raw>
     {% for item in result[0] %}
     <tr data-id="{{ item.id }}">
-      <td>{{ item.title }}</td>
+      <td style="white-space: nowrap; text-overflow:ellipsis; overflow: hidden; max-width:10rem;" >{{ item.title }}</td>
       <td class="d-none d-lg-table-cell">{{ item.author }}</td>
       <td class="d-none d-md-table-cell">
         {{ item.publish_fmt }}
@@ -127,7 +131,7 @@ const { type = 'post' } = Astro.props;
                 const btn = td.querySelector('button') as HTMLButtonElement;
 
                 // TODO: pdt. test
-                btn.textContent = res[0][0].draft && res[0][0].publish < new Date() ? '❎' : '✅';
+                // btn.textContent = res[0][0].draft && res[0][0].publish < new Date() ? '❎' : '✅';
               });
             break;
 
