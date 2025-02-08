@@ -2,6 +2,7 @@ import { $, ProcessOutput } from "npm:zx";
 import "jsr:@std/dotenv/load";
 
 import deno_file from "../deno.json" with { type: "json" };
+import { WEBSLAB_SITE } from "../src/_includes/lib/consts.ts";
 
 const PLATFORMS = ["linux/arm64", "linux/amd64"];
 const IMAGE_NAME = deno_file.name;
@@ -21,6 +22,7 @@ async function main() {
 	if (!OWNER) throw new Error("DB_NS is not set");
 	if (!USERNAME) throw new Error("DOCKER_USERNAME is not set");
 	if (!PASSWORD) throw new Error("DOCKER_TOKEN is not set");
+	if (WEBSLAB_SITE.includes("localhost")) throw new Error("WEBLAB_SITE is set to localhost");
 
 	if (!await buildDist()) throw new Error("Failed to build dist");
 
@@ -104,9 +106,13 @@ try {
 } catch (error) {
 	console.error(error);
 } finally {
-	await $`podman logout`;
-	await $`podman system prune -f`;
+	try {
+		await $`podman logout`;
+	} catch (_error) {
+		// console.error(error);
+	}
 
+	await $`podman system prune -f`;
 	await removeImages();
 
 	console.log("\nScript finish successfully!\n");

@@ -1,13 +1,13 @@
 // @ts-check
 import { defineConfig, sharpImageService } from "astro/config";
-import { WEBSLAB_DOMAIN, WEBSLAB_PROJECT } from "./src/_includes/lib/consts.ts";
+import { WEBSLAB_PROJECT, WEBSLAB_SITE } from "./src/_includes/lib/consts.ts";
 
 import lit from "@astrojs/lit";
 import purgecss from "astro-purgecss";
 import sitemap from "@astrojs/sitemap";
 
 export default defineConfig({
-	site: `https://${WEBSLAB_PROJECT}.${WEBSLAB_DOMAIN}`,
+	site: WEBSLAB_SITE,
 	server: {
 		port: 3000,
 	},
@@ -20,7 +20,13 @@ export default defineConfig({
 		server: {
 			proxy: {
 				"/filefind": {
-					target: "http://localhost:8000",
+					target: WEBSLAB_SITE,
+					changeOrigin: true,
+					secure: false,
+				},
+
+				["/" + WEBSLAB_PROJECT]: {
+					target: WEBSLAB_SITE,
 					changeOrigin: true,
 					secure: false,
 				},

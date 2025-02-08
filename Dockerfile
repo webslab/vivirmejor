@@ -8,6 +8,10 @@
 
 FROM nginx:alpine
 
+# nginx config
 COPY nginx.conf /etc/nginx/conf.d/default.conf
+COPY nginx.env.template /etc/nginx/templates/10-variables.conf.template
+
+# web app
 # COPY --from=build /app/dist /var/www/html
 COPY /dist /var/www/html
