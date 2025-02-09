@@ -1,9 +1,9 @@
-FROM denoland/deno:alpine AS build
+FROM denoland/deno AS build
 
 COPY . /app
 
 WORKDIR /app
-RUN deno install --allow-scripts=npm:sharp,npm:parcel,npm:@parcel/watcher
+RUN deno install --no-lock --node-modules-dir=auto --allow-scripts=npm:sharp,npm:parcel,npm:@parcel/watcher
 RUN deno task build
 
 FROM nginx:alpine
