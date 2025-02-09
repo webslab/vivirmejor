@@ -1,0 +1,159 @@
+---
+import { WlDatabase } from '@webslab/shared/components/database';
+
+import BaseLayout from '$layouts/Base.astro'
+---
+
+<BaseLayout
+  auth={true}
+  admin={true}
+  title="User Stats"
+  description="User modules stats">
+
+  <div
+    id="editor"
+    class="d-flex flex-row justify-content-center align-items-center px-3">
+    <a
+      onclick="history.back()"
+      class="d-none d-lg-block btn btn-outline-primary pt-0"
+      href="#">
+      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-arrow-left" viewBox="0 0 16 16">
+        <path fill-rule="evenodd" d="M15 8a.5.5 0 0 0-.5-.5H2.707l3.147-3.146a.5.5 0 1 0-.708-.708l-4 4a.5.5 0 0 0 0 .708l4 4a.5.5 0 0 0 .708-.708L2.707 8.5H14.5A.5.5 0 0 0 15 8"/>
+      </svg>
+    </a>
+
+    <h1 class="w-100">User Stats</h1>
+  </div>
+
+  <hr />
+
+  <WlDatabase
+    id="user-stats-wldb"
+    live={false}
+    target="section"
+    query=""
+    client:only="lit">
+    <div>
+      <h2 class="h3 text-center">Modules Overview</h2>
+      <section></section>
+    </div>
+
+    <template slot="template" is:raw>
+      {% set user = result[0] %}
+      {% set modules = result[1] %}
+
+      <div class="row justify-content-center">
+
+        {% for module in modules %}
+        <div class="col-sm-8 col-md-5 col-lg-4 col-xxl-3 mb-4">
+          <div class="card border {{ 'border-success' if module.papers.count else 'border-danger' }} shadow">
+            <div class="card-header">
+              <h3 class="card-title mb-0 text-center h5">{{module.title}}</h3>
+
+              <div class="position-absolute top-0 end-0">
+                <input
+                  type="checkbox"
+                  class="form-check-input me-2 mt-2"
+                  id="module-{{module.id}}"
+                  checked>
+              </div>
+            </div>
+
+            <div class="card-body">
+              <div class="card-text">
+                <div class="row">
+                  <div class="col text-end"><strong>Status:</strong></div>
+                  <div class="col">
+                    <em
+                      class="">
+                      {{ "Completed" if module.papers.count else "Pending" }}
+                    </em>
+                    {#
+                    <em
+                      class="{{ 'text-success' if module.papers.count else 'text-danger' }}">
+                      {{ "Completed" if module.papers.count else "Pending" }}
+                    </em>
+                    #}
+                  </div>
+                </div>
+
+                <div class="row">
+                  <div class="col text-end"><strong>Times:</strong></div>
+                  <div class="col"><em>{{ module.papers.count or '0' }}</em></div>
+                </div>
+
+                <div class="row">
+                  <div class="col text-end"><strong>Attempts:</strong></div>
+                  <div class="col"><em>{{ module.visits or '0' }}</em></div>
+                  {#
+                  <div class="col"><em>{{ module.papers.count or '0' }}</em></div>
+                  #}
+                </div>
+
+                <div class="row">
+                  <div class="col text-end"><strong>Average:</strong></div>
+                  <div class="col"><em class="">{{ module.papers.mean or 'X' }}s</em></div>
+                </div>
+              </div>
+            </div>
+
+            <div class="card-footer text-center">
+              <a
+                class="btn btn-primary {{ '' if module.papers.count else 'disabled' }}"
+                href="/auth/admin/user/stats/module?id={{ module.id }}&user={{ user }}">Details</a>
+            </div>
+          </div>
+        </div>
+        {% endfor %}
+
+      </div>
+    </template>
+
+    <script>
+      import { authService } from '$lib/auth'
+      import { waitElement } from '$lib/utils';
+
+      customElements.whenDefined('wl-database').then(async () => {
+        const wlDatabase: HTMLElement = await waitElement('#user-stats-wldb');
+        const userId = new URLSearchParams(window.location.search).get('id')
+        const query = `
+RETURN ${userId};
+SELECT id, title, (
+      SELECT module, count(),
+          math::mean(duration::secs(
+            time::ceil(actions[where name is 'finish'].time[0], 1s) - time::ceil(actions[where name is 'start'].time[0], 1s))
+          ) as mean
+        FROM paper WHERE module = $parent.id GROUP BY module, count
+    )[0].{mean, count} as papers,
+    count(<-visits[where in = ${userId}]) as visits
+  FROM module WHERE id INSIDE ${userId}->grants->module;
+`
+
+        if (!userId || !wlDatabase) {
+          return
+        }
+
+        wlDatabase.query = query
+        wlDatabase.auth = authService
+      })
+    </script>
+  </WlDatabase>
+</BaseLayout>
+
+<script>
+  import { authService } from '$lib/auth'
+  import { waitElement } from '$lib/utils';
+  import { StringRecordId } from 'surrealdb';
+
+  const userId = new URLSearchParams(window.location.search).get('id')
+
+  customElements.whenDefined('wl-database').then(async () => {
+    const wlDatabase: HTMLElement = await waitElement('#user-stats-wldb')
+
+    wlDatabase.addEventListener('wl-task:completed', ({detail}) => {
+      const [_, modules] = detail.result;
+
+      console.log(modules)
+    })
+  })
+</script>

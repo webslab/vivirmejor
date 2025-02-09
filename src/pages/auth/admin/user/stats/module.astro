@@ -1,0 +1,170 @@
+---
+import { WlDatabase } from '@webslab/shared/components/database';
+
+import BaseLayout from '$layouts/Base.astro'
+---
+
+<BaseLayout
+  auth={true}
+  admin={true}
+  title="User Stats"
+  description="User modules stats">
+
+  <div
+    id="editor"
+    class="d-flex flex-row justify-content-center align-items-center px-3">
+    <a
+      onclick="history.back()"
+      class="d-none d-lg-block btn btn-outline-primary pt-0"
+      href="#">
+      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-arrow-left" viewBox="0 0 16 16">
+        <path fill-rule="evenodd" d="M15 8a.5.5 0 0 0-.5-.5H2.707l3.147-3.146a.5.5 0 1 0-.708-.708l-4 4a.5.5 0 0 0 0 .708l4 4a.5.5 0 0 0 .708-.708L2.707 8.5H14.5A.5.5 0 0 0 15 8"/>
+      </svg>
+    </a>
+
+    <h1 class="w-100">Stats Per Module</h1>
+  </div>
+
+  <hr />
+
+  <div class="d-block d-block">
+    <canvas id="myChart" class="w-100"></canvas>
+  </div>
+
+  <WlDatabase
+    id="user-module-wldb"
+    live={false}
+    target="section"
+    query=""
+    client:only="lit">
+    <div>
+      <h2 class="h3 text-center">Modules List</h2>
+
+      <section></section>
+    </div>
+
+    <template slot="template" is:raw>
+      {% set papers = result[0] %}
+
+      <pre>{{ papers | dump }}</pre>
+
+      <table class="table">
+        <thead>
+          <tr>
+            <th scope="col">#</th>
+            <th scope="col">First</th>
+            <th scope="col">Last</th>
+            <th scope="col">Handle</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          <tr>
+            <th scope="row">1</th>
+            <td>Mark</td>
+            <td>Otto</td>
+            <td>@mdo</td>
+          </tr>
+
+          <tr>
+            <th scope="row">2</th>
+            <td>Jacob</td>
+            <td>Thornton</td>
+            <td>@fat</td>
+          </tr>
+
+          <tr>
+            <th scope="row">3</th>
+            <td colspan="2">Larry the Bird</td>
+            <td>@twitter</td>
+          </tr>
+        </tbody>
+      </table>
+    </template>
+
+    <script>
+      import { authService } from '$lib/auth'
+      import { waitElement } from '$lib/utils'
+
+      customElements.whenDefined('wl-database').then(async () => {
+        const wlDatabase: HTMLElement = await waitElement('#user-module-wldb')
+        const userId = new URLSearchParams(window.location.search).get('user')
+        const moduleId = new URLSearchParams(window.location.search).get('id')
+
+        const query = `
+SELECT *, time::ceil(actions[where name is 'finish'].time[0], 1s) - time::ceil(actions[where name is 'start'].time[0], 1s) FROM paper WHERE module = ${moduleId} AND user = ${userId};
+`;
+
+        if (!userId || !wlDatabase) {
+          return
+        }
+
+        wlDatabase.query = query
+        wlDatabase.auth = authService
+      })
+    </script>
+  </WlDatabase>
+</BaseLayout>
+
+<script>
+  import { authService } from '$lib/auth'
+
+  const moduleId = new URLSearchParams(window.location.search).get('id')
+  const userId = new URLSearchParams(window.location.search).get('user')
+  const ctx = document.getElementById('myChart')
+
+  authService.isReady.then(async () => {
+    await import("https://cdn.jsdelivr.net/npm/chart.js")
+    await import("https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns@3.0.0/dist/chartjs-adapter-date-fns.bundle.min.js")
+
+    const db = authService.getDb()
+
+    const res = await db.query(`SELECT id, actions, module.title as title, module.content.len() as n_pages FROM paper WHERE user = ${userId} AND module = ${moduleId};`);
+    // console.log(res[0][0].n_pages)
+    // console.log(res[0][0].actions.find(a => a.name === 'start'))
+
+    document.querySelector('h1').innerHTML += `<h2 class="h4 text-body">${res[0][0].title}</h2>`
+
+    console.log(res[0][1].actions)
+    console.log(res[0][0].actions[1].time)
+
+    let labels = [];
+    for (var i = 0; i < res[0][0].n_pages; i++) {
+      labels.push(`Page ${i}`)
+    }
+
+    const data = res[0][0].actions.map((a) => a.current)
+    data.shift()
+
+    new Chart(ctx, {
+      type: 'line',
+      data: {
+        labels: ["foo", "bar", "baz"],
+
+        datasets: [
+          {
+            label: 'Dataset',
+            // data: Utils.numbers({count: 6, min: -100, max: 100}),
+            // borderColor: Utils.CHART_COLORS.red,
+            data,
+            fill: false,
+            stepped: true,
+          }
+        ]
+      },
+
+      options: {
+        responsive: true,
+        indexAxis: 'x',
+
+        // plugins: {
+        //   title: {
+        //     display: true,
+        //     text: (ctx) => 'Step ' + ctx.chart.data.datasets[0].stepped + ' Interpolation',
+        //   }
+        // }
+
+      }
+    })
+  })
+</script>
