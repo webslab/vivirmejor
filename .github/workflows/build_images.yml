@@ -58,7 +58,7 @@ jobs:
         run: echo ${{ steps.docker_build.outputs.digest }}
 
   publish_npm:
-    name: Build GHCR images
+    name: Build docker hub images
     needs: [build_ghcr]
     runs-on: ubuntu-latest
     permissions:
