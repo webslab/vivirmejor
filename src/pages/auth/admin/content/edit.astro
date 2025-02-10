@@ -18,7 +18,7 @@ import HeroPicker from '$components/admin/posts/HeroPicker.astro'
     id="editor"
     class="d-flex flex-row justify-content-center align-items-center px-3">
     <a
-      onclick="history.back()"
+      onclick="window.history.back()"
       class="d-none d-lg-block btn btn-outline-primary pt-0"
       href="#">
       <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-arrow-left" viewBox="0 0 16 16">
@@ -46,13 +46,10 @@ import HeroPicker from '$components/admin/posts/HeroPicker.astro'
     <HeroPicker class="d-none" id="foo" inputId="hero"/>
 
     <script>
-      import { joditInit } from '$lib/editor'
       import { initWlDatabase } from '$lib/utils'
 
       const postId = new URLSearchParams(window.location.search).get('id')
       const query = `SELECT time::format(publish, '%Y-%m-%d') as publish_fmt, author.name as authorName, * FROM ${postId};`
-
-      // if (!postId) { return }
 
       initWlDatabase(query)
     </script>
@@ -64,7 +61,6 @@ import HeroPicker from '$components/admin/posts/HeroPicker.astro'
     import { joditInit } from '$lib/editor'
     import { authService } from '$lib/auth'
     import { getWlDatabase } from '$lib/utils'
-    import { WEBSLAB_DOMAIN, WEBSLAB_PROJECT, WEBSLAB_TOKEN } from '$lib/consts'
 
     const postId = new URLSearchParams(window.location.search).get('id')
     let currentPage = 0
@@ -72,7 +68,7 @@ import HeroPicker from '$components/admin/posts/HeroPicker.astro'
     getWlDatabase().then(async (wlDatabase) => {
       import('$lib/hero.ts')
 
-      wlDatabase.addEventListener('wl-task:completed', (evt) => {
+      wlDatabase.addEventListener('wl-task:completed', (evt: CustomEvent) => {
         const db = authService.getDb()
 
         const add = document.getElementById('add-page')
@@ -108,24 +104,9 @@ import HeroPicker from '$components/admin/posts/HeroPicker.astro'
           pagesContainer.classList.remove('d-none')
         }
 
-        save.addEventListener('click', async () => {
-          pages[currentPage] = jodit.currentPlace.editor.innerHTML
+        save.addEventListener('click', savePost)
 
-          const post = {
-            hero: hero.value,
-            title: title.value,
-            author: new StringRecordId(author.author),
-            content: pages,
-            publish: new Date(publish.value)
-          }
-
-          // TODO: why?
-          // @ts-ignore: check
-          const res = await db.merge(new StringRecordId(postId), post)
-          console.log(res)
-        })
-
-        add.addEventListener('click', (evt) => {
+        add.addEventListener('click', () => {
           const pagesList = document.getElementById('pages-list')
           const item = document.createElement('li')
 
@@ -143,20 +124,40 @@ import HeroPicker from '$components/admin/posts/HeroPicker.astro'
             </button>`
 
           addItemListener(item, pages.length, pages)
-
           pagesList.insertBefore(item, add.parentNode)
+
+          // @ts-ignore
+          item.firstElementChild.click()
         })
 
-        function addItemListener(item, index, pages: string[]) {
+        async function savePost() {
+          pages[currentPage] = jodit.currentPlace.editor.innerHTML
+
+          const post = {
+            hero: hero.value,
+            title: title.value,
+            author: new StringRecordId(author.author),
+            content: pages,
+            publish: new Date(publish.value)
+          }
+
+          const res = await db.merge(new StringRecordId(postId), post)
+          console.log(res)
+        }
+
+        function addItemListener(item: HTMLElement, index: number, pages: string[]) {
           const del = item.querySelector('#del-page')
           const span = item.querySelector('span')
 
-          span.addEventListener('click', () => {
+          span.addEventListener('click', async () => {
             const hasChanged = jodit.currentPlace.editor.innerHTML !== pages[currentPage]
 
+            if (!pages[currentPage]) {
+              pages[currentPage] = jodit.currentPlace.editor.innerHTML
+            }
+
             if (pages[currentPage] && hasChanged) {
-              alert('save changes before switching pages')
-              return;
+              await savePost()
             }
 
             jodit.currentPlace.editor.innerHTML = pages[index] || ''
@@ -178,14 +179,18 @@ import HeroPicker from '$components/admin/posts/HeroPicker.astro'
             const pagesList = document.getElementById('pages-list')
 
             pagesList.removeChild(item)
+            await db.merge(new StringRecordId(postId), { content: pages })
 
-            const res = await db.merge(new StringRecordId(postId), { content: pages })
+            jodit.currentPlace.editor.innerHTML = pages[--currentPage] || ''
 
-            // currentPage = 0
-            // jodit.currentPlace.editor.innerHTML = pages[currentPage] || ''
-
-            // reload the current page
-            window.location = `/auth/admin/content/edit?id=${postId}`
+            const prev = pagesList.children[currentPage].firstElementChild as HTMLElement
+            setTimeout(() => {
+              prev.click()
+              prev.classList.add('active')
+              setTimeout(() => {
+                prev.classList.remove('active')
+              }, 400)
+            }, 100)
           })
         }
 
