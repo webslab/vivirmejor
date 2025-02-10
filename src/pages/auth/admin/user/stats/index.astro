@@ -123,7 +123,7 @@ SELECT id, title, (
           math::mean(duration::secs(
             time::ceil(actions[where name is 'finish'].time[0], 1s) - time::ceil(actions[where name is 'start'].time[0], 1s))
           ) as mean
-        FROM paper WHERE module = $parent.id GROUP BY module, count
+        FROM paper WHERE module = $parent.id AND user = ${userId} GROUP BY module, count
     )[0].{mean, count} as papers,
     count(<-visits[where in = ${userId}]) as visits
   FROM module WHERE id INSIDE ${userId}->grants->module;
