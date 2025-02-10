@@ -111,7 +111,7 @@ import PlaceHolder from './UsersTablePlace.astro'
 
           switch (action) {
             case 'stats':
-              console.log('stats', id);
+              location.href = `/auth/admin/user/stats?id=${id}`;
               break
 
             case 'update':
