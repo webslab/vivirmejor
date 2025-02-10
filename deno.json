@@ -24,6 +24,7 @@
 		"astro-purgecss": "npm:astro-purgecss@^4.6.1",
 		"bootstrap": "npm:bootstrap@^5.3.3",
 		"jodit": "npm:jodit@4.2.38",
+		"p-limit": "npm:p-limit@^6.2.0",
 		"purgecss": "npm:purgecss@^6.0.0",
 		"sass": "npm:sass@^1.80.4",
 		"sharp": "npm:sharp@^0.33.5",
