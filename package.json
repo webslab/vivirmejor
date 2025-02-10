@@ -1,6 +1,0 @@
-{
-	"type": "module",
-	"dependencies": {
-		"sass": "^1.84.0"
-	}
-}
