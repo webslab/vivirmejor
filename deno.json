@@ -19,7 +19,7 @@
 
 		"@astrojs/lit": "npm:@astrojs/lit@^4.3.0",
 		"@astrojs/sitemap": "npm:@astrojs/sitemap@^3.2.1",
-		"@astrojs/solid-js": "@astrojs/solid-js@^5.0.4",
+		"@astrojs/solid-js": "npm:@astrojs/solid-js@^5.0.4",
 		"@webcomponents/template-shadowroot": "npm:@webcomponents/template-shadowroot@^0.2.1",
 		"astro": "npm:astro@^4.16.7",
 		"astro-purgecss": "npm:astro-purgecss@^4.6.1",
@@ -29,7 +29,7 @@
 		"purgecss": "npm:purgecss@^6.0.0",
 		"sass": "npm:sass@^1.80.4",
 		"sharp": "npm:sharp@^0.33.5",
-		"solid-js": "solid-js@^1.9.4",
+		"solid-js": "npm:solid-js@^1.9.4",
 		"surrealdb": "npm:surrealdb@^1.0.6"
 	},
 	"compilerOptions": {
