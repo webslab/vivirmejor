@@ -3,7 +3,8 @@ import '$styles/article.scss'
 
 import BaseLayout from '$layouts/Base.astro'
 import Likes from '$components/content/Likes.astro'
-import Pagination from '$components/content/Pagination.astro'
+// import Pagination from '$components/content/Pagination.astro'
+import Pagination from '$components/content/Pagination.tsx'
 ---
 
 <style is:global>
@@ -84,7 +85,7 @@ p:has(> img) {
   <h1 id="post-title"></h1>
   <article id="article"></article>
 
-  <Pagination pagid="pagination" />
+  <Pagination client:only="solid-js" />
 </BaseLayout>
 
 <script>
@@ -100,7 +101,10 @@ p:has(> img) {
 
   authService.isReady.then(async () => {
     const db = authService.getDb();
-    const [[module_]]: Module[][] = await db.query("SELECT * FROM module WHERE slug IS $slug;", { slug });
+    const [[module_]]: Module[][] = await db.query(
+      "SELECT visits, likes, title, hero FROM module WHERE slug IS $slug;",
+      { slug }
+    );
 
     if (!module_) {
       // globalThis.location.href = "/content/modules/";
@@ -108,7 +112,7 @@ p:has(> img) {
       return;
     }
 
-    const article = document.getElementById("article");
+    // const article = document.getElementById("article");
     const visits = document.getElementById("content-visits");
     const likes = document.getElementById("content-likes");
     const img = document.getElementById("post-hero") as HTMLImageElement;
@@ -120,6 +124,6 @@ p:has(> img) {
     h1.innerText = module_.title;
     img.src = module_.hero;
 
-    article.innerHTML = module_.content[0];
+    // article.innerHTML = module_.content[0];
   });
 </script>
