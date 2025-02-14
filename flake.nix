@@ -29,6 +29,7 @@
               export LD_LIBRARY_PATH=$(nix path-info nixpkgs#stdenv.cc.cc.lib --extra-experimental-features 'nix-command flakes')/lib:$LD_LIBRARY_PATH;
 
               echo '{"type":"module"}' > package.json
+              alias xd="nix develop --extra-experimental-features 'nix-command flakes'"
               
               echo "=================="
               echo -e "deno:"
