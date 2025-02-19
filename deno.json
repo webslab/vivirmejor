@@ -9,11 +9,11 @@
 		"build:images": "deno run -A ./scripts/build-images.ts"
 	},
 	"imports": {
-		"$components": "./src/_includes/components/*",
-		"$layouts": "./src/_includes/layouts/*",
-		"$images": "./src/_includes/images/*",
-		"$styles": "./src/_includes/styles/*",
-		"$lib": "./src/_includes/lib/*",
+		"$components/": "./src/_includes/components/",
+		"$layouts/": "./src/_includes/layouts/",
+		"$images/": "./src/_includes/images/",
+		"$styles/": "./src/_includes/styles/",
+		"$lib/": "./src/_includes/lib/",
 
 		"@webslab/shared": "npm:@webslab/shared@^0.2.0",
 
