@@ -1,7 +1,7 @@
 import { createSignal, createEffect, onMount } from "solid-js";
 import { PaperService } from "@webslab/shared/services";
-import { authService } from "../../../_includes/lib/auth.ts";
-import type { Module } from "../../../_includes/lib/types.ts";
+import { authService } from "$lib/auth.ts";
+import type { Module } from "$lib/types.ts";
 
 const slug = new URLSearchParams(location.search).get("slug");
 const article = document.querySelector("#article");

@@ -1,6 +1,6 @@
 // @ts-check
 import { defineConfig, sharpImageService } from "astro/config";
-import { WEBSLAB_PROJECT, WEBSLAB_SITE } from "./src/_includes/lib/consts.ts";
+import { WEBSLAB_PROJECT, WEBSLAB_SITE } from "$lib/consts.ts";
 
 import lit from "@astrojs/lit";
 import purgecss from "astro-purgecss";

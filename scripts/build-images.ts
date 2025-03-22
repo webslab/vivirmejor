@@ -2,7 +2,7 @@ import { $, ProcessOutput } from "npm:zx";
 import "jsr:@std/dotenv/load";
 
 import deno_file from "../deno.json" with { type: "json" };
-import { WEBSLAB_SITE } from "../src/_includes/lib/consts.ts";
+import { WEBSLAB_SITE } from "$lib/consts.ts";
 
 const PLATFORMS = ["linux/arm64", "linux/amd64"];
 const IMAGE_NAME = deno_file.name;
