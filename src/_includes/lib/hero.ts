@@ -1,4 +1,4 @@
-import { WEBSLAB_DOMAIN, WEBSLAB_PROJECT, WEBSLAB_TOKEN } from "./consts.ts";
+import { WEBSLAB_DOMAIN, WEBSLAB_PROJECT, WEBSLAB_TOKEN } from "$lib/consts.ts";
 
 type File = { type: string; name: string };
 
@@ -20,7 +20,9 @@ modalSave.addEventListener("click", () => {
 	}
 });
 
-heroModal.addEventListener("hero:modal:data", ({ detail }) => {
+heroModal.addEventListener("hero:modal:data", (event) => {
+	const { detail } = event as CustomEvent;
+
 	hero.value = detail;
 	heroPreview.src = detail;
 });
