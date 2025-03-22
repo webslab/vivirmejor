@@ -78,7 +78,7 @@ lit(),
 ## Build: (WIP)
 
 > [!IMPORTANT]
-> `const.ts` set: const DB = {...}
+> file `const.ts` set: const DB = {...}
 
 ### prepare
 
