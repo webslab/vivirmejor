@@ -8,6 +8,8 @@ import sitemap from "@astrojs/sitemap";
 import solidJs from "@astrojs/solid-js";
 
 export default defineConfig({
+	devToolbar: { enabled: false },
+
 	site: WEBSLAB_SITE,
 	server: {
 		port: 3000,
