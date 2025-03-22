@@ -92,36 +92,31 @@ const { selector } = Astro.props;
 </div>
 
 <script>
-  import { authService } from '$lib/auth'
+  import { authService } from "$lib/auth.ts";
 
-  const form: HTMLElement  = document.getElementById('form-login')
+  const form = document.getElementById("form-login") as HTMLFormElement;
+  form.addEventListener("submit", async (e) => {
+    e.preventDefault();
 
-  form.addEventListener('submit', async (e) => {
-    e.preventDefault()
-
-    const formData = new FormData(form as HTMLFormElement)
-    const data = Object.fromEntries(formData)
-
-    const { username, password } = data
+    const formData = new FormData(form);
+    const data = Object.fromEntries(formData);
+    const { username, password } = data;
 
     // validate form
     if (!username || !password) {
-      alert('Error: Invalid credentials\n- Please fill in all fields')
-      return
+      alert("Error: Invalid credentials\n- Please fill in all fields");
+      return;
     }
 
-    /**
-    if (await authService.signin(username, password)) {
-      window.location.reload()
-    } else {
-      alert('Error: Invalid credentials\n- Please try again')
-    }
-    */
+    // let { username, password } = data;
+    // if (username === "guest" && password === "guest") {
+    //  [{ username, password }] = await authService.getDb().query(`RETURN fn::new_guest();`);
+    // }
 
-    if (await authService.signin(username, password)) {
-      window.location.reload()
-    } else alert(`Error: The username or password is incorrect. Maybe both?`)
-  })
+    if (await authService.signin(String(username), String(password))) {
+      location.reload();
+    } else alert(`Error: The username or password is incorrect. Maybe both?`);
+  });
 </script>
 
 <script>
