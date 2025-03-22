@@ -30,13 +30,13 @@
 
               echo '{"type":"module"}' > package.json
               alias xd="nix develop --extra-experimental-features 'nix-command flakes'"
-              
+
               echo "=================="
               echo -e "deno:"
               echo `${pkgs.deno}/bin/deno --version`
               echo "=================="
               echo "Installing node dependencies:"
-              echo `${pkgs.deno}/bin/deno install`
+              echo `${pkgs.deno}/bin/deno install --allow-scripts=npm:sharp,npm:@parcel/watcher`
               echo
               echo "Done! 📦"
               echo
