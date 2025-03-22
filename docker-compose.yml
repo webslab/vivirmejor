@@ -28,7 +28,7 @@ services:
       - ./public:/app/resources
 
   surrealdb:
-    image: surrealdb/surrealdb:v2.0.4
+    image: surrealdb/surrealdb:v2.2.0
     # image: webslab/store-demo:latest
     network_mode: service:web
     command:
