@@ -60,7 +60,12 @@ export default function Pagination() {
     <div
       class={pages().length === 1 ? "d-none" : "d-flex justify-content-around"}
     >
-      <button onClick={prev} disabled={page() === 1} class="btn btn-primary">
+      <button
+        type="button"
+        onClick={prev}
+        disabled={page() === 1}
+        class="btn btn-primary"
+      >
         Prev
       </button>
 
@@ -69,6 +74,7 @@ export default function Pagination() {
       </div>
 
       <button
+        type="submit"
         onClick={submit}
         class={page() === pages().length ? "btn btn-primary" : "d-none"}
       >
@@ -76,6 +82,7 @@ export default function Pagination() {
       </button>
 
       <button
+        type="button"
         onClick={next}
         class={page() === pages().length ? "d-none" : "btn btn-primary"}
       >
