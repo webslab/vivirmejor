@@ -4,5 +4,5 @@
 	"name": "Bob Johnson",
 	"position": "Manager",
 	"department": "Marketing",
-	"photo": "../../_includes/images/about/bj.png"
+	"photo": "../images/about/bj.png"
 }

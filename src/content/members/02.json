@@ -4,5 +4,5 @@
 	"name": "Alice Smith",
 	"position": "Vice President",
 	"department": "Departamento de Personalidad, Evaluación",
-	"photo": "../../_includes/images/about/as.png"
+	"photo": "../images/about/as.png"
 }

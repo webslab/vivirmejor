@@ -3,21 +3,11 @@
   "compilerOptions": {
     "baseUrl": "./",
     "paths": {
-      "$components/*": [
-        "src/_includes/components/*"
-      ],
-      "$layouts/*": [
-        "src/_includes/layouts/*"
-      ],
-      "$images/*": [
-        "./src/_includes/images/*"
-      ],
-      "$styles/*": [
-        "src/_includes/styles/*"
-      ],
-      "$lib/*": [
-        "./src/_includes/lib/*"
-      ]
+      "$components/*": ["src/components/*"],
+      "$layouts/*": ["src/components/layouts/*"],
+      "$images/*": ["./src/content/images/*"],
+      "$styles/*": ["src/lib/styles/*"],
+      "$lib/*": ["./src/_includes/lib/*"]
     },
     "jsx": "preserve",
     "jsxImportSource": "solid-js"
