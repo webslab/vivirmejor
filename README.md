@@ -21,10 +21,8 @@ To maintain compatibility with Deno, the `package.json` file has been renamed to
 mv package.json.bak package.json
 ```
 
-> **Important**: The `@scope/shared` dependency is only accessible via `file:../../.` Until this
-> package is published, you must work from the root of the project. This project utilizes a Git
-> submodule that serves as a template, so for now, ensure you're operating from the root
-> directory for proper functionality.
+> [!WARNING]
+> The `@scope/shared` dependency is only accessible via `file:../../.` Until this package is published, you must work from the root of the project. This project utilizes a Git sub-module that serves as a template, so for now, ensure you're operating from the root directory for proper functionality.
 
 ### install Dependencies:
 
