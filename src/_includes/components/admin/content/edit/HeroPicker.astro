@@ -1,3 +1,26 @@
+---
+const { class: className, id, current, inputId } = Astro.props
+---
+
+<div id={id} class:list={className}>
+  <label for={inputId} class="form-label">Hero Image</label>
+
+  <div class="input-group">
+    <input class="form-control" type="text" id={inputId} value={current} />
+
+    <!-- data-bs-toggle="modal" -->
+    <!-- data-bs-target="#hero-modal" -->
+    <button
+      id="hero-picker"
+      class="btn btn-outline-primary"
+      type="button">
+      Select
+    </button>
+  </div>
+
+  <img id="hero-preview" class="img-fluid mt-2 rounded" loading="lazy" src={current} />
+</div>
+
 <div
   id="hero-modal"
   class="modal"
@@ -23,6 +46,7 @@
       </div>
     </div>
   </div>
+</div>
 
 <script>
   import 'bootstrap/js/dist/modal'

@@ -1,11 +1,11 @@
 ---
 import '$styles/editor.scss'
-import { WlDatabase } from '@webslab/shared/components/database';
-
 import BaseLayout from '$layouts/Base.astro'
 
-import EditorTemplate from '$components/admin/posts/editor/Template.astro'
-import HeroPicker from '$components/admin/posts/HeroPicker.astro'
+import { WlDatabase } from '@webslab/shared/components/database';
+
+import HeroPicker from '$components/admin/content/edit/HeroPicker.astro'
+import Template from '$components/admin/content/edit/Template.astro'
 ---
 
 <BaseLayout
@@ -42,7 +42,7 @@ import HeroPicker from '$components/admin/posts/HeroPicker.astro'
       <section></section>
     </div>
 
-    <EditorTemplate />
+    <Template />
     <HeroPicker class="d-none" id="foo" inputId="hero"/>
 
     <script>
