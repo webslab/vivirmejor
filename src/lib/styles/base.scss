@@ -1,0 +1,188 @@
+@font-face {
+  font-family: "Gilroy";
+  src:
+    local("Gilroy"),
+    url("/fonts/Gilroy-Regular.ttf") format("truetype");
+}
+
+@font-face {
+  font-family: "Gilroy-Bold";
+  src: URL("/fonts/Gilroy-Bold.ttf") format("truetype");
+}
+
+$primary: #613583;
+$secondary: teal;
+$font-size-base: 1.25rem;
+$font-family-sans-serif:
+  "Gilroy",
+  system-ui,
+  -apple-system,
+  "Segoe UI",
+  Roboto,
+  "Helvetica Neue",
+  "Noto Sans",
+  "Liberation Sans",
+  Arial,
+  sans-serif,
+  "Apple Color Emoji",
+  "Segoe UI Emoji",
+  "Segoe UI Symbol",
+  "Noto Color Emoji" !default;
+
+@import "bootstrap/scss/bootstrap";
+
+:root {
+  --transition-duration: 2s;
+}
+
+:not(:defined) {
+  visibility: hidden;
+}
+
+// just inside editor
+.jodit-wysiwyg p:has(> img) {
+  margin-inline: auto;
+  max-width: 720px;
+
+  border-radius: 0.25rem;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.7);
+}
+
+jodit:has(.article-video) {
+  display: block;
+
+  width: 100% !important;
+  max-width: 720px;
+
+  margin-inline: auto;
+}
+
+.article-video {
+  display: inline-block !important;
+
+  min-width: 100% !important;
+  aspect-ratio: 16/9;
+
+  border-radius: 0.25rem;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.7);
+}
+
+strong,
+b,
+.fw-bold {
+  font-family: "Gilroy-Bold";
+  font-weight: bold;
+}
+
+h1 {
+  // color: $primary;
+  color: var(--bs-primary);
+  text-align: center;
+}
+
+main {
+  padding: 2rem;
+}
+
+::selection {
+  background-color: rgba(var(--bs-primary-rgb), 0.5);
+  color: white;
+}
+
+.lab-green {
+  color: #007398;
+}
+
+[data-bs-theme="dark"] .lab-green {
+  color: #a0d1ca;
+}
+
+.lab-green-invert {
+  color: #a0d1ca;
+}
+
+[data-bs-theme="dark"] .lab-green-invert {
+  color: #007398;
+}
+
+.lab-blue {
+  color: #365abd;
+}
+
+[data-bs-theme="dark"] .lab-blue {
+  color: #98b6e4;
+}
+
+.lab-blue-invert {
+  color: #98b6e4;
+}
+
+[data-bs-theme="dark"] .lab-blue-invert {
+  color: #365abd;
+}
+
+.lab-purple {
+  color: #8659b5;
+}
+
+[data-bs-theme="dark"] .lab-purple {
+  color: #c7b2de;
+}
+
+.lab-purple-invert {
+  color: #c7b2de;
+}
+
+[data-bs-theme="dark"] .lab-purple-invert {
+  color: #8659b5;
+}
+
+.text-blue {
+  color: var(--bs-blue);
+}
+
+.bg-primary {
+  background-color: var(--bs-primary);
+}
+
+.text-primary {
+  color: var(--bs-primary);
+}
+
+.progress-bar {
+  background-color: var(--bs-primary);
+}
+
+.nav-pills .nav-link.active,
+.nav-pills .show > .nav-link {
+  background-color: var(--bs-primary);
+}
+
+.list-group-horizontal > .list-group-item + .list-group-item.active {
+  background-color: var(--bs-primary);
+  border-color: var(--bs-primary);
+}
+
+.page-link.active,
+.active > .page-link {
+  background-color: var(--bs-primary);
+  border-color: var(--bs-primary);
+}
+
+.btn-primary {
+  background-color: var(--bs-primary);
+  border-color: var(--bs-primary);
+}
+
+.btn-check:checked + .btn {
+  border-color: var(--bs-primary);
+}
+
+.border-primary {
+  border-color: var(--bs-primary);
+}
+
+.form-check-input:checked {
+  background-color: var(--bs-primary);
+  border-color: var(--bs-primary);
+}

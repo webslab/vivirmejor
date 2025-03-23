@@ -149,8 +149,8 @@ import BaseLayout from '$layouts/Base.astro'
     </template>
 
     <script>
-      import { authService } from '$lib/auth'
-      import { waitElement } from '$lib/utils';
+      import { authService } from '$lib/services/auth.ts'
+      import { waitElement } from '$lib/utils.ts'
 
       customElements.whenDefined('wl-database').then(async () => {
         const wlDatabase: HTMLElement = await waitElement('#user-edit-wldb');
@@ -175,9 +175,10 @@ import BaseLayout from '$layouts/Base.astro'
 </BaseLayout>
 
 <script>
-import { authService } from '$lib/auth'
-import { waitElement } from '$lib/utils';
 import { StringRecordId } from 'surrealdb';
+
+import { authService } from '$lib/services/auth.ts'
+import { waitElement } from '$lib/utils.ts';
 
 customElements.whenDefined('wl-database').then(async () => {
   const wlDatabase: HTMLElement = await waitElement('#user-edit-wldb');

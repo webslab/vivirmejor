@@ -1,5 +1,5 @@
 ---
-import '$styles/editor.scss'
+import '$lib/styles/editor.scss'
 import BaseLayout from '$layouts/Base.astro'
 
 import { WlDatabase } from '@webslab/shared/components/database';
@@ -58,9 +58,9 @@ import Template from '$components/admin/content/edit/Template.astro'
   <script>
     import { StringRecordId } from 'surrealdb'
 
-    import { joditInit } from '$lib/editor'
-    import { authService } from '$lib/auth'
-    import { getWlDatabase } from '$lib/utils'
+    import { getWlDatabase } from '$lib/utils.ts'
+    import { authService } from '$lib/services/auth.ts'
+    import { editor } from '$lib/services/editor.ts'
 
     const postId = new URLSearchParams(window.location.search).get('id')
     let currentPage = 0
@@ -92,7 +92,7 @@ import Template from '$components/admin/content/edit/Template.astro'
         heroPicker.appendChild(foo)
         foo.classList.remove('d-none')
 
-        const jodit = joditInit(content)
+        const jodit = editor.makeEditor(content)
 
         const table = evt.detail.result[0][0].id.tb
         const pages = evt.detail.result[0][0].content

@@ -78,8 +78,8 @@ const { table } = Astro.props;
 </WlDatabase>
 
 <script>
-  import { authService } from '$lib/auth';
-  import { waitElement } from '$lib/utils';
+  import { authService } from '$lib/services/auth.ts';
+  import { waitElement } from '$lib/utils.ts';
 
   customElements.whenDefined('wl-database').then(async () => {
     const wlDatabase: HTMLElement = await waitElement('wl-database');

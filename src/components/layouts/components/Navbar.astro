@@ -166,7 +166,7 @@ const { loginSelector } = Astro.props;
       </ul>
 
       <script>
-        import { authService } from '$lib/auth'
+        import { authService } from '$lib/services/auth.ts'
 
         const navLogin = document.getElementById('nav-login')
         const navAdmin = document.querySelectorAll('[data-admin]')

@@ -6,8 +6,7 @@
       "$components/*": ["src/components/*"],
       "$layouts/*": ["src/components/layouts/*"],
       "$images/*": ["./src/content/images/*"],
-      "$styles/*": ["src/lib/styles/*"],
-      "$lib/*": ["./src/_includes/lib/*"]
+      "$lib/*": ["./src/lib/*"]
     },
     "jsx": "preserve",
     "jsxImportSource": "solid-js"

@@ -96,9 +96,9 @@ const { modalId } = Astro.props;
 </div>
 
 <script>
-  import { authService } from '$lib/auth';
-  import type { Surreal } from 'surrealdb';
-  import { StringRecordId } from 'surrealdb';
+  import { StringRecordId, type Surreal } from 'surrealdb';
+
+  import { authService } from '$lib/services/auth.ts';
 
   const form = document.getElementById('form-create-user') as HTMLFormElement
 

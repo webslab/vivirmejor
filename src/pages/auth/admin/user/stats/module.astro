@@ -86,8 +86,8 @@ import BaseLayout from '$layouts/Base.astro'
     </template>
 
     <script>
-      import { authService } from '$lib/auth'
-      import { waitElement } from '$lib/utils'
+      import { authService } from '$lib/services/auth.ts'
+      import { waitElement } from '$lib/utils.ts'
 
       customElements.whenDefined('wl-database').then(async () => {
         const wlDatabase: HTMLElement = await waitElement('#wldb-module-stats')
@@ -111,7 +111,7 @@ SELECT *, time::ceil(actions[where name is 'submit'].time[0], 1s) - time::ceil(a
 </BaseLayout>
 
 <script>
-  import { authService } from "$lib/auth.ts";
+  import { authService } from "$lib/services/auth.ts";
 
   const moduleId = new URLSearchParams(location.search).get("id");
   const userId = new URLSearchParams(location.search).get("user");

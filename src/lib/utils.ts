@@ -1,4 +1,4 @@
-import { authService, type IAuthService } from "./auth.ts";
+import { authService, type IAuthService } from "$lib/services/auth.ts";
 
 export function waitElement<T extends Element>(selector: string): Promise<T> {
 	return new Promise((resolve, _reject) => {

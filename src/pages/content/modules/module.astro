@@ -1,9 +1,9 @@
 ---
-import '$styles/article.scss'
+import '$lib/styles/article.scss'
 
 import BaseLayout from '$layouts/Base.astro'
+
 import Likes from '$components/content/Likes.astro'
-// import Pagination from '$components/content/Pagination.astro'
 import Pagination from '$components/content/Pagination.tsx'
 ---
 
@@ -89,8 +89,8 @@ p:has(> img) {
 </BaseLayout>
 
 <script>
-  import type { Module } from "$lib/types";
-  import { authService } from "$lib/auth";
+  import { authService } from '$lib/services/auth.ts'
+  import type { Module } from '$lib/types.ts'
 
   const slug = new URLSearchParams(globalThis.location.search).get("slug");
 

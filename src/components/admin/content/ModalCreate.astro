@@ -39,7 +39,7 @@ const { table, modalId } = Astro.props;
 </div>
 
 <script>
-  import { authService } from '$lib/auth'
+  import { authService } from '$lib/services/auth.ts'
 
   // NOTE: modalId
   const modal = document.getElementById('amdin-content-create-modal')

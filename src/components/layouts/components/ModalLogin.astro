@@ -92,7 +92,7 @@ const { selector } = Astro.props;
 </div>
 
 <script>
-  import { authService } from "$lib/auth.ts";
+  import { authService } from "$lib/services/auth.ts";
 
   const form = document.getElementById("form-login") as HTMLFormElement;
   form.addEventListener("submit", async (e) => {

@@ -2,9 +2,9 @@
 import { SITE_TITLE, SITE_DESCRIPTION } from '$lib/consts';
 
 import Head from './components/Head.astro'
-import ModalLogin from './components/ModalLogin.astro'
 import Footer from './components/Footer.astro'
 import Navbar from './components/Navbar.astro'
+import ModalLogin from './components/ModalLogin.astro'
 
 interface Props {
   auth?: boolean;
@@ -78,7 +78,7 @@ const { auth = true, admin = true, title, description } = Astro.props;
       import '@webslab/shared/components/security';
 
       customElements.whenDefined('wl-security').then(async () => {
-        import('$lib/auth').then((module) => {
+        import('$lib/services/auth.ts').then((module) => {
           const { authService } = module
           const wlSecurity = document.querySelector('wl-security')
 

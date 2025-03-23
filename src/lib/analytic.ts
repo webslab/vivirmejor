@@ -1,5 +1,5 @@
-import { authService } from "./auth.ts";
-import type { Analytic } from "./types.ts";
+import { authService } from "$lib/services/auth.ts";
+import type { Analytic } from "$lib/types.ts";
 
 authService.isReady.then(() => {
 	const db = authService.getDb();
@@ -32,6 +32,7 @@ authService.isReady.then(() => {
 			pathname: location.pathname,
 			search: location.search,
 		},
+
 		navigator: {
 			lang: navigator.language,
 			agent: navigator.userAgent,
@@ -47,6 +48,7 @@ authService.isReady.then(() => {
 				}
 				: null,
 		},
+
 		performance: {
 			totalLookupTime,
 			connectionTime,

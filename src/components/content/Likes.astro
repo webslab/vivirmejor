@@ -18,7 +18,7 @@ const { table } = Astro.props;
 </div>
 
 <script>
-  import { authService } from "$lib/auth";
+  import { authService } from "$lib/services/auth.ts";
 
   const likesContainer = document.getElementById("content-likes-container") as HTMLButtonElement;
   const table = likesContainer.dataset.table; // globalThis.location.pathname.split('/').pop()

@@ -1,5 +1,5 @@
 ---
-import '$styles/article.scss'
+import '$lib/styles/article.scss'
 
 import BaseLayout from '$layouts/Base.astro'
 import Likes from '$components/content/Likes.astro'
@@ -80,8 +80,8 @@ p:has(> img) {
 </BaseLayout>
 
 <script>
-  import type { Post } from "$lib/types";
-  import { authService } from "$lib/auth";
+  import { authService } from "$lib/services/auth.ts";
+  import type { Post } from "$lib/types.ts";
 
   const slug = new URLSearchParams(globalThis.location.search).get("slug");
 

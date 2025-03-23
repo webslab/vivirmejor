@@ -1,12 +1,20 @@
-import { WEBSLAB_DOMAIN, WEBSLAB_PROJECT, WEBSLAB_TOKEN } from "$lib/consts.ts";
+import { Jodit } from "jodit/es2021/jodit.min.js";
+import { editor } from "$lib/services/editor.ts";
 
-type File = { type: string; name: string };
+// type File = { type: string; name: string };
 
 const heroPreview = document.getElementById("hero-preview") as HTMLImageElement;
 const heroPicker = document.getElementById("hero-picker") as HTMLButtonElement;
 const heroModal = document.getElementById("hero-modal")!;
 const modalSave = heroModal!.querySelector(".btn-primary")!;
 const hero = document.getElementById("hero") as HTMLInputElement;
+
+const fb = new Jodit.modules.FileBrowser({
+	// @ts-ignore-start: NOTE:
+	theme: editor.getOptions().theme,
+	// @ts-ignore-start: NOTE:
+	...editor.getOptions().filebrowser,
+});
 
 modalSave.addEventListener("click", () => {
 	const modalClose = heroModal.querySelector(".btn-secondary") as HTMLButtonElement;
@@ -27,6 +35,13 @@ heroModal.addEventListener("hero:modal:data", (event) => {
 	heroPreview.src = detail;
 });
 
+heroPicker.addEventListener("click", () => {
+	fb.open((images: any) => {
+		console.log(images);
+	});
+});
+
+/**
 heroPicker.addEventListener("click", async () => {
 	const response = await fetch("/filefind/index.php?action=files", {
 		method: "GET",
@@ -70,3 +85,4 @@ heroPicker.addEventListener("click", async () => {
 			heroBody.innerHTML = heroSelect.outerHTML;
 		});
 });
+*/
