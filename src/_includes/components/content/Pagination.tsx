@@ -26,7 +26,7 @@ export default function Pagination() {
       { slug },
     );
 
-    setPages(module_.content);
+    setPages(module_.content!);
     setPaperSvc(new PaperService(module_, authService));
   });
 
