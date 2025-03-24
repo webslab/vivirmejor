@@ -44,7 +44,9 @@ export default function Pagination() {
     if (paperSvc()) paperSvc()!.next(page());
 
     setPage(page() + 1);
-    location.hash = `#post-title`;
+    // location.hash = `#post-title`;
+    // location.hash = `#article`;
+    location.hash = `article`;
   };
 
   const submit = async () => {
