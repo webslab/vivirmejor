@@ -2,20 +2,22 @@
 import { SITE_TITLE, SITE_DESCRIPTION } from '$lib/consts';
 
 import Head from './components/Head.astro'
-import Footer from './components/Footer.astro'
+import Back from './components/Back.astro'
 import Navbar from './components/Navbar.astro'
+import Footer from './components/Footer.astro'
 import ModalLogin from './components/ModalLogin.astro'
 
 interface Props {
   auth?: boolean;
   admin?: boolean
 
+  back?: { enabled: boolean, path: string };
   title?: string;
   description?: string;
 }
 
 const modalLogin = 'modal-login'
-const { auth = true, admin = true, title, description } = Astro.props;
+const { back, auth = true, admin = true, title, description } = Astro.props;
 ---
 
 <!DOCTYPE html>
@@ -29,6 +31,7 @@ const { auth = true, admin = true, title, description } = Astro.props;
   <body>
     <header>
       <Navbar loginSelector={'#' + modalLogin} />
+      <ModalLogin selector={modalLogin} />
     </header>
 
     <wl-security
@@ -40,6 +43,10 @@ const { auth = true, admin = true, title, description } = Astro.props;
         id="content"
         slot="content">
         <div class="p-1">
+          <Back back={back} title={title}>
+            <slot name="actions" />
+          </Back>
+
           <slot />
         </div>
       </main>
@@ -55,18 +62,6 @@ const { auth = true, admin = true, title, description } = Astro.props;
           data-bs-target={"#" + modalLogin}>
           Login
         </button>
-
-        <!--
-        <a
-          aria-label="login to access"
-          onclick="
-            const pathname = window.location.pathname
-            localStorage.setItem('pathname', pathname)
-          "
-          href="/auth/login/">
-          Login
-        </a>
-        -->
       </div>
     </wl-security>
 
@@ -76,17 +71,15 @@ const { auth = true, admin = true, title, description } = Astro.props;
 
     <script>
       import '@webslab/shared/components/security';
+      import { authService } from '$lib/services/auth.ts'
 
-      customElements.whenDefined('wl-security').then(async () => {
+      customElements.whenDefined('wl-security').then(() => {
         import('$lib/services/auth.ts').then((module) => {
-          const { authService } = module
           const wlSecurity = document.querySelector('wl-security')
 
           wlSecurity.auth = authService
         })
       })
     </script>
-
-    <ModalLogin selector={modalLogin} />
   </body>
 </html>

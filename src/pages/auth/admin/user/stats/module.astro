@@ -7,30 +7,11 @@ import BaseLayout from '$layouts/Base.astro'
 <BaseLayout
   auth={true}
   admin={true}
-  title="User Stats"
-  description="User modules stats">
+  title="User stats per user"
+  description="User modules stats"
+  back={{enabled: true}}>
 
-  <div class="d-flex flex-row justify-content-center align-items-center px-3">
-    <button
-      onclick="history.back()"
-      class="d-none d-lg-block btn btn-outline-primary pt-0">
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        width="24"
-        height="24"
-        fill="currentColor"
-        class="bi bi-arrow-left"
-        viewBox="0 0 16 16">
-        <path fill-rule="evenodd" d="M15 8a.5.5 0 0 0-.5-.5H2.707l3.147-3.146a.5.5 0 1 0-.708-.708l-4 4a.5.5 0 0 0 0 .708l4 4a.5.5 0 0 0 .708-.708L2.707 8.5H14.5A.5.5 0 0 0 15 8"/>
-      </svg>
-    </button>
-
-    <h1 class="w-100">Stats Per Module</h1>
-  </div>
-
-  <hr />
-
-  <div class="d-block d-block">
+  <div class="d-block">
     <canvas id="myChart" class="w-100"></canvas>
   </div>
 

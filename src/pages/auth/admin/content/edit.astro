@@ -11,27 +11,16 @@ import Template from '$components/admin/content/edit/Template.astro'
 <BaseLayout
   auth={true}
   admin={true}
-  title="Post Editor"
-  description="Posts Editor for the Blog">
+  title="Content editor"
+  description="Posts Editor for the Blog"
+  back={{enabled: true}}>
 
-  <div
-    id="editor"
-    class="d-flex flex-row justify-content-center align-items-center px-3">
-    <a
-      onclick="window.history.back()"
-      class="d-none d-lg-block btn btn-outline-primary pt-0"
-      href="#">
-      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-arrow-left" viewBox="0 0 16 16">
-        <path fill-rule="evenodd" d="M15 8a.5.5 0 0 0-.5-.5H2.707l3.147-3.146a.5.5 0 1 0-.708-.708l-4 4a.5.5 0 0 0 0 .708l4 4a.5.5 0 0 0 .708-.708L2.707 8.5H14.5A.5.5 0 0 0 15 8"/>
-      </svg>
-    </a>
-
-    <h1 class="w-100"><span id="table-name">Post</span> Editor</h1>
-
-    <button id="save" type="submit" class="btn btn-primary">Save</button>
+  <div slot="actions">
+    <button
+      id="save"
+      type="submit"
+      class="btn btn-primary">Save</button>
   </div>
-
-  <hr />
 
   <WlDatabase
     live={false}
@@ -96,8 +85,6 @@ import Template from '$components/admin/content/edit/Template.astro'
 
         const table = evt.detail.result[0][0].id.tb
         const pages = evt.detail.result[0][0].content
-
-        tableName.innerText = table.charAt(0).toUpperCase() + table.slice(1)
 
         if (table === 'module') {
           pagesList(pages)
