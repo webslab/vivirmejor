@@ -100,11 +100,11 @@ deno task build
 
 ```bash
 # arm
-podman build --rm -t webslab/<project>:v0.X.X-arm64 --platform=linux/arm64 .
+podman build --rm -t webslab/<project>:v0.X.X-arm64 --platform=linux/arm64 --file deploy/Dockerfile .
 
 # wip
-podman build --rm -t webslab/<project>:latest --platform=linux/arm64,linux/amd64 .
-podman build --rm -t webslab/<project>:latest .
+podman build --rm -t webslab/<project>:latest --platform=linux/arm64,linux/amd64 --file deploy/Dockerfile .
+podman build --rm -t webslab/<project>:latest --file deploy/Dockerfile .
 ```
 
 ```sh
