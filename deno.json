@@ -29,7 +29,7 @@
 		"sass": "npm:sass@^1.80.4",
 		"sharp": "npm:sharp@^0.33.5",
 		"solid-js": "npm:solid-js@^1.9.4",
-		"surrealdb": "npm:surrealdb@^1.0.6"
+		"surrealdb": "npm:surrealdb@^1.2.1"
 	},
 	"lock": false,
 	"compilerOptions": {
