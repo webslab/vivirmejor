@@ -1,3 +1,4 @@
+import { parseArgs } from "jsr:@std/cli/parse-args";
 import { $, ProcessOutput } from "npm:zx";
 import "jsr:@std/dotenv/load";
 
@@ -12,8 +13,11 @@ const OWNER = Deno.env.get("DB_NS") || "webslab";
 const USERNAME = Deno.env.get("DOCKER_USERNAME") || OWNER;
 const PASSWORD = Deno.env.get("DOCKER_TOKEN");
 
+const args = parseArgs(Deno.args, { boolean: ["latest", "push"] });
+
 const platforms = PLATFORMS.join(",");
 const repo = `${OWNER}/${IMAGE_NAME}`;
+const tagLatest = args.latest;
 
 async function main() {
 	console.log(`Building docker images for ${IMAGE_NAME} - v${VERSION}...\n`);
@@ -29,19 +33,24 @@ async function main() {
 	await createManifests();
 	await buildImages();
 	await loginDocker();
-	await pushImages();
+
+	if (args.push) await pushImages();
 }
 
 function pushImages(): Promise<ProcessOutput[]> {
 	const version = `${repo}:v${VERSION}`;
-	const latest = `${repo}:latest`;
+	const pushCommands = [
+		$`podman manifest push --all ${version} docker://docker.io/${version}`,
+	];
+
+	if (tagLatest) {
+		const latest = `${repo}:latest`;
+		pushCommands.push($`podman manifest push --all ${latest} docker://docker.io/${latest}`);
+	}
 
 	console.log("Pushing images...\n");
 
-	return Promise.all([
-		$`podman manifest push --all ${version} docker://docker.io/${version}`,
-		$`podman manifest push --all ${latest} docker://docker.io/${latest}`,
-	]);
+	return Promise.all(pushCommands);
 }
 
 function loginDocker(): Promise<ProcessOutput> {
@@ -50,48 +59,58 @@ function loginDocker(): Promise<ProcessOutput> {
 
 function buildImages(): Promise<ProcessOutput[]> {
 	const version = `${repo}:v${VERSION}`;
-	const latest = `${repo}:latest`;
+	const buildCommands = [
+		$`podman build --file deploy/Dockerfile --manifest ${version} --platform ${platforms} .`,
+	];
+
+	if (tagLatest) {
+		const latest = `${repo}:latest`;
+		buildCommands.push($`podman build --manifest ${latest} --platform ${platforms} .`);
+	}
 
 	console.log("Building images...\n");
 
-	return Promise.all([
-		$`podman build --manifest ${version} --platform ${platforms} .`,
-		$`podman build --manifest ${latest} --platform ${platforms} .`,
-	]);
+	return Promise.all(buildCommands);
 }
 
 async function removeImages(): Promise<void> {
 	type Image = { Names: string[] };
 
 	const version = `${repo}:v${VERSION}`;
-	const latest = `${repo}:latest`;
-
 	const list = await $`podman image list --format json`.json() as Image[];
 
 	console.log("Removing images...");
 
-	const foo = list.filter((image: Image) =>
-		image.Names.includes("localhost/" + latest) ||
-		image.Names.includes("localhost/" + version)
-	);
+	const imagesToRemove = list.filter((image: Image) => {
+		let shouldRemove = image.Names.includes("localhost/" + version);
+		if (tagLatest) {
+			shouldRemove = shouldRemove ||
+				image.Names.includes("localhost/" + `${repo}:latest`);
+		}
+		return shouldRemove;
+	});
 
-	if (foo.length === 0) {
+	if (imagesToRemove.length === 0) {
 		console.log("No images to remove");
 		return;
 	}
 
-	foo.forEach(async (image: Image) => {
+	for (const image of imagesToRemove) {
 		const name = image.Names[0];
 		await $`podman rmi ${name}`;
-	});
+	}
 }
 
 async function createManifests(): Promise<boolean> {
 	const version = `${repo}:v${VERSION}`;
-	const latest = `${repo}:latest`;
+	let success = (await $`podman manifest create ${version}`).exitCode === 0;
 
-	return (await $`podman manifest create ${version}`).exitCode === 0 &&
-		(await $`podman manifest create ${latest}`).exitCode === 0;
+	if (tagLatest) {
+		const latest = `${repo}:latest`;
+		success = success && (await $`podman manifest create ${latest}`).exitCode === 0;
+	}
+
+	return success;
 }
 
 async function buildDist(): Promise<boolean> {
