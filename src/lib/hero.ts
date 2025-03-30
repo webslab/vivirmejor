@@ -13,6 +13,8 @@ const fb = new Jodit.modules.FileBrowser({
 	// @ts-ignore-start: NOTE:
 	theme: editor.getOptions().theme,
 	// @ts-ignore-start: NOTE:
+	uploader: editor.getOptions().uploader,
+	// @ts-ignore-start: NOTE:
 	...editor.getOptions().filebrowser,
 });
 
