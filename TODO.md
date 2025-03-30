@@ -1,5 +1,9 @@
 # TODO:
 
+- [ ] PWA:
+
+  - take a [look](https://vite-pwa-org.netlify.app/)
+
 - [ ] DB: (shared) url should be host and live select the protocol
 - [ ] astro: update to 5.0.3
 - [ ] create user: modules tab first
