@@ -89,6 +89,13 @@ div:has(> wl-question.invalid) {
   box-shadow: 0 0 5px rgba(0, 0, 0, 0.7);
 }
 
+strong,
+b,
+.fw-bold {
+  font-family: "Gilroy-Bold";
+  font-weight: bold;
+}
+
 h1 {
   // color: $primary;
   color: var(--bs-primary);
