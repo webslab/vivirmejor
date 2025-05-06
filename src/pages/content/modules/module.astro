@@ -1,0 +1,119 @@
+---
+import '$lib/styles/article.scss'
+
+import BaseLayout from '$layouts/Base.astro'
+
+import Likes from '$components/content/Likes.astro'
+import Pagination from '$components/content/Pagination.tsx'
+---
+
+<style is:global>
+main {
+  min-height: 80svh;
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+}
+
+article {
+  min-height: 80svh;
+}
+
+article figure img,
+article p img {
+  max-width: 720px;
+  border-radius: 0.25rem;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.7);
+}
+
+p:has(> img) {
+  text-align: center;
+}
+</style>
+
+<BaseLayout
+  auth={true}
+  admin={false}
+  title="Module"
+  description="Module content"
+  back={{ enabled: true, path: "/content/modules" }}>
+  <div slot="actions" class="d-flex gap-3">
+    <div class="d-flex flex-column text-center">
+      <svg
+        class="bi bi-eye text-primary"
+        xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" viewBox="0 0 16 16" >
+        <path d="M16 8s-3-5.5-8-5.5S0 8 0 8s3 5.5 8 5.5S16 8 16 8M1.173 8a13 13 0 0 1 1.66-2.043C4.12 4.668 5.88 3.5 8 3.5s3.879 1.168 5.168 2.457A13 13 0 0 1 14.828 8q-.086.13-.195.288c-.335.48-.83 1.12-1.465 1.755C11.879 11.332 10.119 12.5 8 12.5s-3.879-1.168-5.168-2.457A13 13 0 0 1 1.172 8z" />
+        <path d="M8 5.5a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5M4.5 8a3.5 3.5 0 1 1 7 0 3.5 3.5 0 0 1-7 0" />
+      </svg>
+
+      <span
+        id="content-visits"
+        style="font-size: .75rem;cursor: default;"
+        class="badge rounded-pill mt-1 text-bg-primary fw-bold"></span>
+    </div>
+
+    <Likes table="module">
+      <span
+        id="content-likes"
+        style="background-color: var(--bs-pink); font-size: .75rem;cursor: pointer;"
+        class="badge rounded-pill mt-1 fw-bold"></span>
+    </Likes>
+  </div>
+
+  <div class="text-center mb-3">
+    <img
+      class="rounded shadow"
+      width="960"
+      height="540"
+      id="post-hero"
+      alt="Post Hero"
+      src="" />
+  </div>
+
+  <!-- <h1 id="post-title"></h1> -->
+  <article id="article"></article>
+
+  <Pagination client:only="solid-js" />
+</BaseLayout>
+
+<script>
+  import { authService } from '$lib/services/auth.ts'
+  import type { Module } from '$lib/types.ts'
+
+  const slug = new URLSearchParams(globalThis.location.search).get("slug");
+
+  if (!slug) {
+    // globalThis.location.href = "/content/modules/";
+    history.back();
+  }
+
+  authService.isReady.then(async () => {
+    const db = authService.getDb();
+    const [[module_]]: Module[][] = await db.query(
+      "SELECT visits, likes, title, hero FROM module WHERE slug IS $slug;",
+      { slug }
+    );
+
+    if (!module_) {
+      // globalThis.location.href = "/content/modules/";
+      history.back();
+      return;
+    }
+
+    // const article = document.getElementById("article");
+    const visits = document.getElementById("content-visits");
+    const likes = document.getElementById("content-likes");
+    const img = document.getElementById("post-hero") as HTMLImageElement;
+    const h1 = document.getElementById("main-title");
+
+    visits.innerText = `${module_.visits || 0}`;
+    likes.innerText = `${module_.likes || 0}`;
+
+    h1.innerText = module_.title;
+    img.src = module_.hero;
+
+    // article.innerHTML = module_.content[0];
+  });
+</script>

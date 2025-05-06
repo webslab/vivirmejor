@@ -1,0 +1,57 @@
+---
+import { WlDatabase } from '@webslab/shared/components/database';
+---
+
+<WlDatabase
+  id="foo"
+  live="{false}"
+  target="fieldset"
+  query="SELECT id,title,author.name as author FROM module;"
+  client:only="lit">
+  <div class="row">
+    <div class="col-12 col-lg-4 mt-3">
+      <h3 class="ms-2 h5 text-warning">Important</h3>
+
+      <p class="mb-0">
+        Select only those modules that you grant access to the user.
+      </p>
+    </div>
+
+    <div class="col col-lg-8">
+      <fieldset></fieldset>
+    </div>
+  </div>
+
+  <template slot="template" is:raw>
+    {% for item in result[0] %}
+    <ul class="list-group list-group-horizontal mb-1">
+      <li class="list-group-item">
+        <input
+          name="module"
+          class="form-check-input"
+          id="{{ item.slug }}"
+          value="{{ item.id }}"
+          type="checkbox" />
+      </li>
+
+      <li class="list-group-item w-100">
+        <label class="form-check-label" for="{{ item.slug }}">
+          {{ item.title }}
+          <span class="d-none d-md-inline"> - {{ item.author }}</span>
+        </label>
+      </li>
+    </ul>
+    {% endfor %}
+  </template>
+
+  <script>
+    import { authService } from '$lib/services/auth.ts';
+    import { waitElement } from '$lib/utils.ts';
+
+    customElements.whenDefined('wl-database').then(async () => {
+      const wlDatabase: HTMLElement = await waitElement('#foo');
+      // @ts-ignore
+      wlDatabase.auth = authService // yes, it's a setter
+    });
+  </script>
+</WlDatabase>

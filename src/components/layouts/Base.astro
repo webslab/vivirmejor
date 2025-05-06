@@ -1,0 +1,85 @@
+---
+import { SITE_TITLE, SITE_DESCRIPTION } from '$lib/consts';
+
+import Head from './components/Head.astro'
+import Back from './components/Back.astro'
+import Navbar from './components/Navbar.astro'
+import Footer from './components/Footer.astro'
+import ModalLogin from './components/ModalLogin.astro'
+
+interface Props {
+  auth?: boolean;
+  admin?: boolean
+
+  back?: { enabled: boolean, path: string };
+  title?: string;
+  description?: string;
+}
+
+const modalLogin = 'modal-login'
+const { back, auth = true, admin = true, title, description } = Astro.props;
+---
+
+<!DOCTYPE html>
+<html
+  data-bs-theme="light"
+  lang="es">
+	<head>
+		<Head title={title || SITE_TITLE} description={description || SITE_DESCRIPTION} />
+	</head>
+
+  <body>
+    <header>
+      <Navbar loginSelector={'#' + modalLogin} />
+      <ModalLogin selector={modalLogin} />
+    </header>
+
+    <wl-security
+      class="py-3"
+      style="--wl-security-bg: rgba(var(--bs-body-bg-rgb), 0.7)"
+      needs={JSON.stringify({auth, admin})}>
+      <main
+        class="container bg-body-tertiary rounded shadow-lg"
+        id="content"
+        slot="content">
+        <div class="p-1">
+          <Back back={back} title={title}>
+            <slot name="actions" />
+          </Back>
+
+          <slot />
+        </div>
+      </main>
+
+      <div slot="warning">
+        <h4>Please login to access</h4>
+
+        <button
+          type="button"
+          class="btn btn-primary"
+          aria-label="login to access"
+          data-bs-toggle="modal"
+          data-bs-target={"#" + modalLogin}>
+          Login
+        </button>
+      </div>
+    </wl-security>
+
+    <div class="mt-5">
+      <Footer />
+    </div>
+
+    <script>
+      import '@webslab/shared/components/security';
+      import { authService } from '$lib/services/auth.ts'
+
+      customElements.whenDefined('wl-security').then(() => {
+        import('$lib/services/auth.ts').then((module) => {
+          const wlSecurity = document.querySelector('wl-security')
+
+          wlSecurity.auth = authService
+        })
+      })
+    </script>
+  </body>
+</html>

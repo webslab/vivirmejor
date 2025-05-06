@@ -1,0 +1,124 @@
+---
+interface Props {
+  selector: string;
+};
+
+const { selector } = Astro.props;
+---
+
+<div
+  id={selector}
+  class="modal fade"
+  tabindex="-1"
+  aria-labelledby="exampleModalLabel"
+  aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="exampleModalLabel">Login</h1>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Close"></button>
+      </div>
+
+      <div class="modal-body">
+        <form id="form-login">
+          <div class="mb-3">
+            <label
+              class="form-label"
+              for="inputUsername">
+              Username
+            </label>
+
+            <input
+              class="form-control"
+              id="inputUsername"
+              name="username"
+              autocomplete="on"
+              type="text" />
+          </div>
+
+          <div class="mb-3">
+            <label
+              class="form-label"
+              for="inputPassword">
+              Password
+            </label>
+
+            <input
+              class="form-control"
+              id="inputPassword"
+              name="password"
+              autocomplete="on"
+              type="password" />
+          </div>
+
+          <div class="d-flex justify-content-between">
+            <div class="mb-3 form-check">
+              <input
+                class="form-check-input"
+                id="inputCheck"
+                type="checkbox" />
+
+              <label
+                class="form-check-label"
+                for="inputCheck">
+                Remember me
+              </label>
+            </div>
+          </div>
+        </form>
+      </div>
+
+      <div class="modal-footer">
+        <button
+          type="button"
+          class="btn btn-outline-secondary"
+          data-bs-dismiss="modal">
+          Close
+        </button>
+
+        <button
+          form="form-login"
+          type="submit"
+          class="btn btn-primary">
+          Submit
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  import { authService } from "$lib/services/auth.ts";
+
+  const form = document.getElementById("form-login") as HTMLFormElement;
+  form.addEventListener("submit", async (e) => {
+    e.preventDefault();
+
+    const formData = new FormData(form);
+    const data = Object.fromEntries(formData);
+    const { username, password } = data;
+
+    // validate form
+    if (!username || !password) {
+      alert("Error: Invalid credentials\n- Please fill in all fields");
+      return;
+    }
+
+    // let { username, password } = data;
+    // if (username === "guest" && password === "guest") {
+    //  [{ username, password }] = await authService.getDb().query(`RETURN fn::new_guest();`);
+    // }
+
+    if (await authService.signin(String(username), String(password))) {
+      location.reload();
+    } else alert(`Error: The username or password is incorrect. Maybe both?`);
+  });
+</script>
+
+<script>
+  import 'bootstrap/js/dist/modal'
+</script>

@@ -1,0 +1,173 @@
+---
+import Profile from './_ModalProfile.astro'
+import Modules from './_ModalModules.astro'
+
+interface Props {
+  modalId: string;
+}
+
+const { modalId } = Astro.props;
+---
+
+<div
+  id={modalId}
+  data-bs-backdrop="static"
+  data-bs-keyboard="false"
+  tabindex="-1"
+  aria-labelledby="staticBackdropLabel"
+  aria-hidden="true"
+  class="modal fade">
+  <div class="modal-dialog modal-lg modal-fullscreen-md-down">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2 class="modal-title fs-5" id="staticBackdropLabel">Create User</h2>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Close"></button>
+      </div>
+
+      <ul class="nav nav-tabs mx-2 mt-2">
+        <li class="nav-item">
+          <button
+            id="user-profile"
+            class="nav-link active"
+            data-bs-toggle="tab"
+            data-bs-target="#user-profile-pane"
+            type="button"
+            role="tab"
+            aria-controls="user-profile-pane"
+            aria-selected="true">
+            Profile
+          </button>
+        </li>
+
+        <li class="nav-item">
+          <button
+            id="user-modules"
+            class="nav-link"
+            data-bs-toggle="tab"
+            data-bs-target="#user-modules-pane"
+            type="button"
+            role="tab"
+            aria-controls="user-modules-pane"
+            aria-selected="false">
+            Modules
+          </button>
+        </li>
+      </ul>
+
+      <form id="form-create-user">
+        <div class="modal-body row mx-2 mb-2 border border-top-0">
+          <div class="tab-content" id="myTabContent">
+            <div
+              class="tab-pane fade show active"
+              id="user-profile-pane"
+              role="tabpanel"
+              aria-labelledby="user-profile"
+              tabindex="0">
+              <Profile />
+            </div>
+
+            <div
+              class="tab-pane fade"
+              id="user-modules-pane"
+              role="tabpanel"
+              aria-labelledby="user-modules"
+              tabindex="0">
+              <Modules />
+            </div>
+          </div>
+        </div>
+      </form>
+
+      <div class="modal-footer">
+        <button class="btn btn-secondary" data-bs-dismiss="modal" type="button">
+          Close
+        </button>
+
+        <button class="btn btn-primary" form="form-create-user" type="submit">
+          Submit
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  import { StringRecordId, type Surreal } from 'surrealdb';
+
+  import { authService } from '$lib/services/auth.ts';
+
+  const form = document.getElementById('form-create-user') as HTMLFormElement
+
+  form.addEventListener('submit', async (event) => {
+    const close = form.closest('.modal').querySelector('[data-bs-dismiss="modal"]') as HTMLButtonElement
+    event.preventDefault();
+
+    const db = authService.getDb();
+
+    const formData = new FormData(form);
+    const data = Object.fromEntries(formData);
+
+    if (!validate(data)) return;
+
+    const user = await createUser(db, data) as { id: string } // ...
+
+    if (data.module) {
+      let modules = []
+
+      formData.forEach((value, key) => {
+        if (key === 'module') {
+          modules.push(new StringRecordId(value.toString()))
+        }
+      })
+
+      await grantsModule(db, user.id.toString(), modules)
+    }
+
+    // close modal
+    form.reset()
+    close.click()
+  })
+
+  function validate(data: any) {
+    const { name, email, password } = data
+    if (!name || !email || !password) {
+      alert('Error: Invalid credentials\n- Please fill in all fields')
+      return false
+    }
+
+    return true
+  }
+
+  async function grantsModule(db: Surreal, userId: string, data: object[]) {
+    const allocator = new StringRecordId(authService.getUser().id)
+
+    await db.query(
+      `RELATE $user->grants->$modules SET allocator = $allocator;`,
+      { user: new StringRecordId(userId), modules: data, allocator }
+    )
+  }
+
+  async function createUser(db: Surreal, data: any): Promise<unknown> {
+    const res = await db.query(`
+      CREATE user CONTENT {
+        name: $name,
+        email: $email,
+        username: rand::string(8).lowercase(),
+        password: $password
+      }`, data)
+
+    if (confirm(`User created successfully! \n\t copy password?\n ${data.password}`)) {
+      navigator.clipboard.writeText(data.password)
+    }
+
+    return res[0][0]
+  }
+</script>
+
+<script>
+  import "bootstrap/js/dist/tab";
+</script>

@@ -1,0 +1,31 @@
+---
+import BaseLayout from '$layouts/Base.astro'
+
+import CreateModal from '$components/admin/content/ModalCreate.astro'
+import ContentTable from '$components/admin/content/Table.astro'
+
+const table = Astro.url.pathname.split('/').filter(n => n).pop();
+const modalId = `amdin-content-create-modal`;
+---
+
+<BaseLayout
+  auth={true}
+  admin={true}
+  title={"List of " + table}
+  description={table + " manager"}
+  back={{enabled: true, href: "/auth/admin"}}>
+
+  <div slot="actions">
+    <button
+      type="button"
+      class="btn btn-primary d-none d-lg-block flex-shrink-1"
+      data-bs-toggle="modal"
+      data-bs-target={`#${modalId}`}>Create</button>
+  </div>
+
+  <div class="px-xl-2">
+    <ContentTable table={table} />
+  </div>
+
+  <CreateModal table={table} modalId={modalId} />
+</BaseLayout>

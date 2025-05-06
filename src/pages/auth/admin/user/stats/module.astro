@@ -1,0 +1,153 @@
+---
+import { WlDatabase } from '@webslab/shared/components/database';
+
+import BaseLayout from '$layouts/Base.astro'
+---
+
+<BaseLayout
+  auth={true}
+  admin={true}
+  title="User stats per user"
+  description="User modules stats"
+  back={{enabled: true}}>
+
+  <div class="d-block">
+    <canvas id="myChart" class="w-100"></canvas>
+  </div>
+
+  <WlDatabase
+    id="wldb-module-stats"
+    live={false}
+    target="section"
+    query=""
+    client:only="lit">
+    <div>
+      <h2 class="h3 text-center">Modules List</h2>
+
+      <section></section>
+    </div>
+
+    <template slot="template" is:raw>
+      {% set papers = result[0] %}
+
+      <pre>{{ papers | dump }}</pre>
+
+      <table class="table">
+        <thead>
+          <tr>
+            <th scope="col">#</th>
+            <th scope="col">First</th>
+            <th scope="col">Last</th>
+            <th scope="col">Handle</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          <tr>
+            <th scope="row">1</th>
+            <td>Mark</td>
+            <td>Otto</td>
+            <td>@mdo</td>
+          </tr>
+
+          <tr>
+            <th scope="row">2</th>
+            <td>Jacob</td>
+            <td>Thornton</td>
+            <td>@fat</td>
+          </tr>
+
+          <tr>
+            <th scope="row">3</th>
+            <td colspan="2">Larry the Bird</td>
+            <td>@twitter</td>
+          </tr>
+        </tbody>
+      </table>
+    </template>
+
+    <script>
+      import { authService } from '$lib/services/auth.ts'
+      import { waitElement } from '$lib/utils.ts'
+
+      customElements.whenDefined('wl-database').then(async () => {
+        const wlDatabase: HTMLElement = await waitElement('#wldb-module-stats')
+        const userId = new URLSearchParams(window.location.search).get('user')
+        const moduleId = new URLSearchParams(window.location.search).get('id')
+
+        const query = `
+SELECT *, time::ceil(actions[where name is 'submit'].time[0], 1s) - time::ceil(actions[where name is 'start'].time[0], 1s)
+  FROM paper WHERE module = ${moduleId} AND user = ${userId};
+`;
+
+        if (!userId || !wlDatabase) {
+          return
+        }
+
+        wlDatabase.query = query
+        wlDatabase.auth = authService
+      })
+    </script>
+  </WlDatabase>
+</BaseLayout>
+
+<script>
+  import { authService } from "$lib/services/auth.ts";
+
+  const moduleId = new URLSearchParams(location.search).get("id");
+  const userId = new URLSearchParams(location.search).get("user");
+  const ctx = document.getElementById("myChart");
+
+  authService.isReady.then(async () => {
+    await import("https://cdn.jsdelivr.net/npm/chart.js");
+    await import(
+      "https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns@3.0.0/dist/chartjs-adapter-date-fns.bundle.min.js"
+    );
+
+    const db = authService.getDb();
+    const [[paper]] = await db.query(`
+  SELECT
+      id, actions, module.title as title, module.content.len() as n_pages
+    FROM paper
+    WHERE user = ${userId} AND module = ${moduleId};`);
+
+    document.querySelector("h1")!.innerHTML += `<h2 class="h4 text-body">${paper.title}</h2>`;
+
+    const labels = [];
+    for (let i = 0; i < paper.n_pages; i++) {
+      labels.push(`Page ${i}`);
+    }
+
+    const data = paper.actions.map((a: { current: string }) => a.current);
+    data.shift();
+
+    new Chart(ctx, {
+      type: "line",
+      data: {
+        labels: ["foo", "bar", "baz"],
+
+        datasets: [
+          {
+            label: "Dataset",
+            // data: Utils.numbers({count: 6, min: -100, max: 100}),
+            // borderColor: Utils.CHART_COLORS.red,
+            data,
+            fill: false,
+            stepped: true,
+          },
+        ],
+      },
+
+      options: {
+        responsive: true,
+        indexAxis: "x",
+        // plugins: {
+        //   title: {
+        //     display: true,
+        //     text: (ctx) => 'Step ' + ctx.chart.data.datasets[0].stepped + ' Interpolation',
+        //   }
+        // }
+      },
+    });
+  });
+</script>
