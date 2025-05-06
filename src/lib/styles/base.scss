@@ -18,8 +18,8 @@
   font-display: swap;
 }
 
-$primary: #613583;
-$secondary: teal;
+// $primary: #613583;
+// $secondary: teal;
 $font-size-base: 1.25rem;
 $font-family-sans-serif:
   "Gilroy",
@@ -45,16 +45,6 @@ $font-family-sans-serif:
 
 :not(:defined) {
   visibility: hidden;
-}
-
-@view-transition {
-  navigation: auto;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  @view-transition {
-    navigation: none;
-  }
 }
 
 // just inside editor
