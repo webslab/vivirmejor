@@ -1,5 +1,5 @@
 {
-  "name": "vivirmejor",
+	"name": "base",
 	"version": "0.5.3",
 	"tasks": {
 		"dev": "astro dev",
