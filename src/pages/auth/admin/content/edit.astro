@@ -6,6 +6,7 @@ import { WlDatabase } from '@webslab/shared/components/database';
 
 import HeroPicker from '$components/admin/content/edit/HeroPicker.astro'
 import Template from '$components/admin/content/edit/Template.astro'
+import Modal from '$components/admin/content/edit/Modal.astro'
 ---
 
 <BaseLayout
@@ -44,153 +45,214 @@ import Template from '$components/admin/content/edit/Template.astro'
     </script>
   </WlDatabase>
 
-  <script>
-    import { StringRecordId } from 'surrealdb'
+  <Modal modalId="questionModal" />
 
-    import { getWlDatabase } from '$lib/utils.ts'
-    import { authService } from '$lib/services/auth.ts'
-    import { editor } from '$lib/services/editor.ts'
+  <!-- TOAST -->
+<div class="toast-container position-fixed bottom-0 end-0 p-3">
+  <div id="liveToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+    <div class="toast-header">
+      <strong class="me-auto text-primary">Editor</strong>
+      <small>Now</small>
 
-    const postId = new URLSearchParams(window.location.search).get('id')
-    let currentPage = 0
+      <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+    </div>
 
-    getWlDatabase().then(async (wlDatabase) => {
-      import('$lib/hero.ts')
+    <div class="toast-body">Content saved</div>
 
-      wlDatabase.addEventListener('wl-task:completed', (evt: CustomEvent) => {
-        const db = authService.getDb()
+    <script>console.log('hello')</script>
+  </div>
+</div>
+</BaseLayout>
 
-        const add = document.getElementById('add-page')
-        const save = document.getElementById('save')
-        const hero = document.getElementById('hero') as HTMLInputElement
-        const title = document.getElementById('title') as HTMLInputElement
-        const author = document.getElementById('author').dataset;
-        const publish = document.getElementById('publish') as HTMLInputElement
-        const content = document.getElementById('post-content') as HTMLTextAreaElement
-        const tableName = document.getElementById('table-name')
-        const pagesContainer = document.getElementById('pages-container')
+<script>
+  import { StringRecordId } from 'surrealdb'
+  import Toast from "bootstrap/js/dist/toast";
 
-        // hero
-        const foo = document.getElementById('foo')
-        const heroPicker = document.getElementById('heroPicker')
-        const heroPreview = document.getElementById('hero-preview') as HTMLImageElement
-        const heroCurrent = heroPicker.dataset.current
+  import { QuestionService } from '$lib/services/questions.ts'
+  import { WEBSLAB_PROJECT, WEBSLAB_TOKEN } from '$lib/consts.ts'
 
-        heroPreview.src = heroCurrent
-        hero.value = heroCurrent
-        heroPicker.appendChild(foo)
-        foo.classList.remove('d-none')
+  import { getWlDatabase } from '$lib/utils.ts'
+  import { authService } from '$lib/services/auth.ts'
+  import { editor } from '$lib/services/editor.ts'
 
-        const jodit = editor.makeEditor(content)
+  import type { Question } from '$lib/types.ts'
 
-        const table = evt.detail.result[0][0].id.tb
-        const pages = evt.detail.result[0][0].content
+  const postId = new URLSearchParams(window.location.search).get('id')
+  let currentPage = 0
 
-        if (table === 'module') {
-          pagesList(pages)
-          pagesContainer.classList.remove('d-none')
+  getWlDatabase().then(async (wlDatabase) => {
+    import('$lib/hero.ts')
+
+    wlDatabase.addEventListener('wl-task:completed', (evt: CustomEvent) => {
+      const db = authService.getDb()
+
+      const add = document.getElementById('add-page')
+      const save = document.getElementById('save')
+      const hero = document.getElementById('hero') as HTMLInputElement
+      const title = document.getElementById('title') as HTMLInputElement
+      const author = document.getElementById('author').dataset;
+      const publish = document.getElementById('publish') as HTMLInputElement
+      const content = document.getElementById('post-content') as HTMLTextAreaElement
+      const tableName = document.getElementById('table-name')
+      const pagesContainer = document.getElementById('pages-container')
+      const toastLiveExample = document.getElementById('liveToast')
+
+      // hero
+      const foo = document.getElementById('foo')
+      const heroPicker = document.getElementById('heroPicker')
+      const heroPreview = document.getElementById('hero-preview') as HTMLImageElement
+      const heroCurrent = heroPicker.dataset.current
+
+      heroPreview.src = heroCurrent
+      hero.value = heroCurrent
+      heroPicker.appendChild(foo)
+      foo.classList.remove('d-none')
+
+      const questionsSvc = postId.startsWith('module')
+        ? new QuestionService(db, "questionModal")
+        : undefined
+
+      const jodit = editor.makeEditor(content, questionsSvc)
+
+      const table = evt.detail.result[0][0].id.tb
+      const pages = evt.detail.result[0][0].content
+
+      // tableName.innerText = table.charAt(0).toUpperCase() + table.slice(1)
+
+      if (table === 'module') {
+        pagesList(pages)
+        pagesContainer.classList.remove('d-none')
+      }
+
+      save.addEventListener('click', savePost)
+
+      add.addEventListener('click', () => {
+        const pagesList = document.getElementById('pages-list')
+        const item = document.createElement('li')
+
+        item.classList.add('list-group-item')
+        item.dataset.index = pages.length
+        item.innerHTML = `
+          <span class="btn btn-sm btn-outline-secondary">Page: ${pages.length + 1}</span>
+
+          <button
+            id="del-page"
+            class="btn btn-sm btn-outline-danger mt-0 float-end">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-x-lg" viewBox="0 0 16 16">
+              <path d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8z"/>
+            </svg>
+          </button>`
+
+        addItemListener(item, pages.length, pages)
+        pagesList.insertBefore(item, add.parentNode)
+
+        // @ts-ignore
+        item.firstElementChild.click()
+        savePost()
+      })
+
+      async function savePost() {
+        pages[currentPage] = jodit.currentPlace.editor.innerHTML
+
+        const toastBootstrap = Toast.getOrCreateInstance(toastLiveExample)
+        toastBootstrap.show()
+
+        // question
+        // let alert
+        // document.querySelectorAll("wl-question[edit]").forEach((el) => {
+        //   el.removeAttribute('edit')
+        //   alert ?? true
+        // })
+
+        // if (alert) {
+        //   window.alert('There was editable content. Please confirm changes before saving.')
+        //   return;
+        // }
+
+        const post = {
+          hero: hero.value,
+          title: title.value,
+          author: new StringRecordId(author.author),
+          content: pages,
+          publish: new Date(publish.value)
         }
 
-        save.addEventListener('click', savePost)
+        const res = await db.merge(new StringRecordId(postId), post)
+        console.log(res)
+      }
 
-        add.addEventListener('click', () => {
-          const pagesList = document.getElementById('pages-list')
-          const item = document.createElement('li')
+      function addItemListener(item: HTMLElement, index: number, pages: string[]) {
+        const del = item.querySelector('#del-page')
+        const span = item.querySelector('span')
 
-          item.classList.add('list-group-item')
-          item.dataset.index = pages.length
-          item.innerHTML = `
-            <span class="btn btn-sm btn-outline-secondary">Page: ${pages.length + 1}</span>
+        if (index === 0) {
+          span.classList.add('active')
+        }
 
-            <button
-              id="del-page"
-              class="btn btn-sm btn-outline-danger mt-0 float-end">
-              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-x-lg" viewBox="0 0 16 16">
-                <path d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8z"/>
-              </svg>
-            </button>`
+        span.addEventListener('click', async () => {
+          const hasChanged = jodit.currentPlace.editor.innerHTML !== pages[currentPage]
+          const prev = pagesContainer.querySelector('.active')
 
-          addItemListener(item, pages.length, pages)
-          pagesList.insertBefore(item, add.parentNode)
-
-          // @ts-ignore
-          item.firstElementChild.click()
-          savePost()
-        })
-
-        async function savePost() {
-          pages[currentPage] = jodit.currentPlace.editor.innerHTML
-
-          const post = {
-            hero: hero.value,
-            title: title.value,
-            author: new StringRecordId(author.author),
-            content: pages,
-            publish: new Date(publish.value)
+          if (!pages[currentPage]) {
+            pages[currentPage] = jodit.currentPlace.editor.innerHTML
           }
 
-          const res = await db.merge(new StringRecordId(postId), post)
-          console.log(res)
-        }
+          if (pages[currentPage] && hasChanged) {
+            await savePost()
+          }
 
-        function addItemListener(item: HTMLElement, index: number, pages: string[]) {
-          const del = item.querySelector('#del-page')
-          const span = item.querySelector('span')
+          if (index === currentPage) return;
 
-          span.addEventListener('click', async () => {
-            const hasChanged = jodit.currentPlace.editor.innerHTML !== pages[currentPage]
+          // toggle active class
+          prev?.classList.remove('active')
+          item.firstElementChild.classList.add('active')
 
-            if (!pages[currentPage]) {
-              pages[currentPage] = jodit.currentPlace.editor.innerHTML
-            }
+          jodit.currentPlace.editor.innerHTML = pages[index] || ''
+          currentPage = parseInt(item.dataset.index)
+        })
 
-            if (pages[currentPage] && hasChanged) {
-              await savePost()
-            }
+        del.addEventListener('click', async (evt) => {
+          if (index === 0) {
+            alert('you cannot delete the first page')
+            return;
+          }
 
-            jodit.currentPlace.editor.innerHTML = pages[index] || ''
-            currentPage = parseInt(item.dataset.index)
-          })
+          if (index !== currentPage) {
+            alert('you cannot delete a page that is not the current page')
+            return;
+          }
 
-          del.addEventListener('click', async (evt) => {
-            if (index === 0) {
-              alert('you cannot delete the first page')
-              return;
-            }
-
-            if (index !== currentPage) {
-              alert('you cannot delete a page that is not the current page')
-              return;
-            }
-
-            pages.splice(index, 1)
-            const pagesList = document.getElementById('pages-list')
-
-            pagesList.removeChild(item)
-            await db.merge(new StringRecordId(postId), { content: pages })
-
-            jodit.currentPlace.editor.innerHTML = pages[--currentPage] || ''
-
-            const prev = pagesList.children[currentPage].firstElementChild as HTMLElement
-            setTimeout(() => {
-              prev.click()
-              prev.classList.add('active')
-              setTimeout(() => {
-                prev.classList.remove('active')
-              }, 400)
-            }, 100)
-          })
-        }
-
-        function pagesList(pages: string[]) {
+          pages.splice(index, 1)
           const pagesList = document.getElementById('pages-list')
-          const items = pagesList.querySelectorAll('li')
 
-          items.forEach((item, index) => {
-            if (item.dataset.index) addItemListener(item, index, pages)
-          })
-        }
-      })
+          pagesList.removeChild(item)
+          await db.merge(new StringRecordId(postId), { content: pages })
+
+          jodit.currentPlace.editor.innerHTML = pages[--currentPage] || ''
+
+          const prev = pagesList.children[currentPage].firstElementChild as HTMLElement
+          setTimeout(() => {
+            prev.click()
+            prev.classList.add('active')
+            setTimeout(() => {
+              prev.classList.remove('active')
+            }, 400)
+          }, 100)
+        })
+      }
+
+      function pagesList(pages: string[]) {
+        const pagesList = document.getElementById('pages-list')
+        const items = pagesList.querySelectorAll('li')
+
+        items.forEach((item, index) => {
+          if (item.dataset.index) addItemListener(item, index, pages)
+        })
+      }
     })
-  </script>
-</BaseLayout>
+  })
+</script>
+
+<script>
+  import '@webslab/shared/components/question'
+</script>
