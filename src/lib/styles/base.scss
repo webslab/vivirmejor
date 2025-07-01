@@ -18,8 +18,8 @@
   font-display: swap;
 }
 
-// $primary: #613583;
-// $secondary: teal;
+$primary: #613583;
+$secondary: teal;
 $font-size-base: 1.25rem;
 $font-family-sans-serif:
   "Gilroy",
@@ -83,13 +83,6 @@ jodit:has(.article-video) {
 
   border-radius: 0.25rem;
   box-shadow: 0 0 5px rgba(0, 0, 0, 0.7);
-}
-
-strong,
-b,
-.fw-bold {
-  font-family: "Gilroy-Bold";
-  font-weight: bold;
 }
 
 h1 {
