@@ -13,7 +13,7 @@ Jodit.defaultOptions.controls.question = {
 
 	exec: function (editor: IJodit) {
 		const question = `
-<wl-question style="--wl-question-dialog-backdrop: rgba(var(--bs-body-bg-rgb), 0.7);">
+<wl-question edit style="--wl-question-dialog-backdrop: rgba(var(--bs-body-bg-rgb), 0.7);">
     <label slot="label" class="form-label">How are you?</label>
     <input slot="input" class="form-text w-100" type="text" />
     <div slot="spelled" class="d-flex justify-content-between"></div>

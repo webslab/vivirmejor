@@ -45,4 +45,21 @@ export class QuestionService extends _QuestionService {
 			this.modal._element.addEventListener("result.bs.modal", handleResult);
 		});
 	}
+
+	public delete(question: Question): Question | void {
+		// Encontrar el elemento wl-question en el DOM
+		const questionElement = document.querySelector(`wl-question[qid="${question.id}"]`);
+		if (questionElement) {
+			// Buscar el div padre con clase form-control
+			const parentDiv = questionElement.closest('div.form-control');
+			if (parentDiv) {
+				// Eliminar el div padre completo
+				parentDiv.remove();
+			} else {
+				// Si no hay div padre, eliminar solo la pregunta
+				questionElement.remove();
+			}
+			return question;
+		}
+	}
 }
