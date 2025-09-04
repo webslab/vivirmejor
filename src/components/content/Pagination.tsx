@@ -39,30 +39,26 @@ export default function Pagination() {
 
     if (wlQuestions.length === 0) return true;
 
-    let sendAlert = false;
+    // Use the new simplified API from @webslab/shared v0.5.0
+    const allValid = Array.from(wlQuestions).every((question: any) =>
+      question.isValid(),
+    );
+
+    if (!allValid) {
+      alert("Please fill all the questions");
+      return false;
+    }
+
+    // Update answers for each question
     wlQuestions.forEach((question) => {
       const qid = question.getAttribute("qid")!;
       const input = question.children[1] as HTMLInputElement;
 
-      if (
-        input.value === "" ||
-        parseInt(input.value) === 0 ||
-        (parseInt(input.value) < parseInt(input.min) &&
-          parseInt(input.value) > parseInt(input.max))
-      )
-        sendAlert = true;
-
       setAnswers((prev) => {
         const filtered = prev.filter((answer) => answer.question !== qid);
-
         return [...filtered, { question: qid, content: input.value }];
       });
     });
-
-    if (sendAlert) {
-      alert("Please fill all the questions");
-      return false;
-    }
 
     return true;
   }

@@ -14,7 +14,7 @@
 		"$images/": "./src/content/images/",
 		"$lib/": "./src/lib/",
 
-		"@webslab/shared": "npm:@webslab/shared@^0.4.0",
+		"@webslab/shared": "npm:@webslab/shared@^0.5.0",
 
 		"@astrojs/lit": "npm:@astrojs/lit@^4.3.0",
 		"@astrojs/sitemap": "npm:@astrojs/sitemap@^3.2.1",
