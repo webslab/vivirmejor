@@ -2,7 +2,7 @@
 import Link from './Link.astro'
 
 import { Image } from 'astro:assets'
-import brand from '$images/brand-base.png'
+import brand from '$images/logovivirmejor01.png'
 
 interface Props {
   loginSelector: string;
@@ -18,8 +18,9 @@ const { loginSelector } = Astro.props;
 </style>
 
 <nav
-  style="background-color: rgba(var(--bs-primary-rgb), 0.3);"
-  class="navbar navbar-expand-lg shadow-sm">
+  class="navbar navbar-expand-lg shadow-sm"
+  style="background-color: #d4d4d4;">
+
   <div class="container-xxl bd-gutter flex-wrap flex-lg-nowrap">
     <a
       class="navbar-brand"
@@ -53,7 +54,7 @@ const { loginSelector } = Astro.props;
           <Link
             class="nav-link"
             href="/">
-            Home
+            Inicio
           </Link>
         </li>
 
@@ -61,7 +62,7 @@ const { loginSelector } = Astro.props;
           <Link
             class="nav-link"
             href="/about/">
-            About
+            Nosotros
           </Link>
         </li>
 
@@ -78,7 +79,7 @@ const { loginSelector } = Astro.props;
             id="nav-modules"
             class="nav-link disabled"
             href="/content/modules/">
-            Modules
+            Modulos
           </Link>
         </li>
 
@@ -89,7 +90,7 @@ const { loginSelector } = Astro.props;
             data-bs-toggle="dropdown"
             aria-expanded="false"
             href="#">
-            Access
+            Acceso
           </a>
 
           <ul

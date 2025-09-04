@@ -1,20 +1,58 @@
 @font-face {
-  font-family: "Gilroy";
+  font-family: "Approach";
   src:
-    local("Gilroy"),
-    url("/fonts/Gilroy-Regular.ttf") format("truetype");
+    local("Approach Light"),
+    url("/fonts/Approach-Light.otf") format("opentype");
+  font-weight: 300;
+  font-style: normal;
+  font-display: swap;
 }
 
 @font-face {
-  font-family: "Gilroy-Bold";
-  src: URL("/fonts/Gilroy-Bold.ttf") format("truetype");
+  font-family: "Approach";
+  src:
+    local("Approach Regular"),
+    url("/fonts/Approach-Regular.otf") format("opentype");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Approach";
+  src:
+    local("Approach Regular Italic"),
+    url("/fonts/Approach-RegularItalic.otf") format("opentype");
+  font-weight: 400;
+  font-style: italic;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Approach";
+  src:
+    local("Approach Medium"),
+    url("/fonts/Approach-Medium.otf") format("opentype");
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Approach";
+  src:
+    local("Approach Bold"),
+    url("/fonts/Approach-Bold.otf") format("opentype");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
 }
 
 // $primary: #613583;
 // $secondary: teal;
 $font-size-base: 1.25rem;
 $font-family-sans-serif:
-  "Gilroy",
+  "Approach",
   system-ui,
   -apple-system,
   "Segoe UI",
@@ -65,6 +103,13 @@ jodit:has(.article-video) {
 
   border-radius: 0.25rem;
   box-shadow: 0 0 5px rgba(0, 0, 0, 0.7);
+}
+
+strong,
+b,
+.fw-bold {
+  font-family: "Approach";
+  font-weight: 700; // Cambiado para usar el peso correcto
 }
 
 h1 {
@@ -179,3 +224,4 @@ main {
   background-color: var(--bs-primary);
   border-color: var(--bs-primary);
 }
+

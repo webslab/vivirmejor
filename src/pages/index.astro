@@ -3,17 +3,19 @@ import { Image } from 'astro:assets'
 
 import BaseLayout from '$layouts/Base.astro'
 
-import logoP from '$images/logo-base-1080_1080.png'
+import logoP from '$images/logovivirmejor02.png'
 import logoC from '$images/logo-conselleria-rgb_rojo_cast.png'
+import logoD from '$images/logouv.png'
+import logoE from '$images/oclogo.png'
 ---
 
 <BaseLayout
   auth={false}
   admin={false}
-  title="Welcome to Vivirmejor"
+  title="Bienvenido"
   description="Home page">
 
-  <section class="col col-md-6 mx-auto">
+  <section class="col col-md-6 mx-auto mb-5">
     <Image
       class="img-fluid ratio ratio-1x1"
       src={logoP}
@@ -23,22 +25,40 @@ import logoC from '$images/logo-conselleria-rgb_rojo_cast.png'
       alt="Project Logo"/>
   </section>
 
-  <div class="row">
-    <div class="col-6 col-md-3 col-lg-3 mx-auto">
+  <div style="height: 80px;"></div>
+
+  <div class="row text-center mt-5">
+    <div class="col-12 col-md-4 mb-3">
       <Image
-        class="img-fluid ratio ratio-16x9"
+        class="img-fluid mx-auto d-block w-50 w-md-25"
         src={logoC}
         format={'webp'}
         widths={[240, 540, logoC.width]}
         sizes={`(max-width: 360px) 240px, (max-width: 1600px) 540px, ${logoC.width}px`}
-        alt="Project Logo"/>
+        alt="Logo Conselleria"
+      />
     </div>
 
-    <div class="col-6 col-md-3 col-lg-3 mx-auto bg-warning">
+    <div class="col-12 col-md-4 mb-3">
+      <Image
+        class="img-fluid mx-auto d-block w-50 w-md-25"
+        src={logoD}
+        format={'webp'}
+        widths={[240, 540, logoD.width]}
+        sizes={`(max-width: 360px) 240px, (max-width: 1600px) 540px, ${logoD.width}px`}
+        alt="Logo 1"
+      />
     </div>
 
-    <div class="col mx-auto bg-primary">
-      f
+    <div class="col-12 col-md-4 mb-3">
+      <Image
+        class="img-fluid mx-auto d-block w-50 w-md-25"
+        src={logoE}
+        format={'webp'}
+        widths={[240, 540, logoE.width]}
+        sizes={`(max-width: 360px) 240px, (max-width: 1600px) 540px, ${logoE.width}px`}
+        alt="Logo 2"
+      />
     </div>
   </div>
 </BaseLayout>
