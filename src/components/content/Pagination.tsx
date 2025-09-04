@@ -4,12 +4,15 @@ import { PaperService } from "@webslab/shared/services";
 import { authService } from "$lib/services/auth.ts";
 import type { Module } from "$lib/types.ts";
 
+type Answer = { question: string; content: string };
+
 const slug = new URLSearchParams(location.search).get("slug");
 const article = document.querySelector("#article");
 
 export default function Pagination() {
   const [page, setPage] = createSignal(1);
   const [pages, setPages] = createSignal([""]);
+  const [answers, setAnswers] = createSignal<Answer[]>([]);
   const [paperSvc, setPaperSvc] = createSignal<PaperService>();
 
   createEffect(() => {
@@ -31,9 +34,43 @@ export default function Pagination() {
     setPaperSvc(new PaperService(module_, authService));
   });
 
+  function findAnswers(): boolean {
+    const wlQuestions = article!.querySelectorAll("wl-question");
+
+    if (wlQuestions.length === 0) return true;
+
+    let sendAlert = false;
+    wlQuestions.forEach((question) => {
+      const qid = question.getAttribute("qid")!;
+      const input = question.children[1] as HTMLInputElement;
+
+      if (
+        input.value === "" ||
+        parseInt(input.value) === 0 ||
+        (parseInt(input.value) < parseInt(input.min) &&
+          parseInt(input.value) > parseInt(input.max))
+      )
+        sendAlert = true;
+
+      setAnswers((prev) => {
+        const filtered = prev.filter((answer) => answer.question !== qid);
+
+        return [...filtered, { question: qid, content: input.value }];
+      });
+    });
+
+    if (sendAlert) {
+      alert("Please fill all the questions");
+      return false;
+    }
+
+    return true;
+  }
+
   const prev = () => {
     if (page() === 1) return;
     if (paperSvc()) paperSvc()!.prev(page());
+    if (!findAnswers()) return;
 
     setPage(page() - 1);
     location.hash = `#post-title`;
@@ -42,6 +79,7 @@ export default function Pagination() {
   const next = () => {
     if (page() === pages().length) return;
     if (paperSvc()) paperSvc()!.next(page());
+    if (!findAnswers()) return;
 
     setPage(page() + 1);
     // location.hash = `#post-title`;
@@ -50,8 +88,10 @@ export default function Pagination() {
   };
 
   const submit = async () => {
+    if (!findAnswers()) return;
+
     try {
-      await paperSvc()!.submit(page());
+      await paperSvc()!.submit(page(), answers());
     } catch (error) {
       console.error(error);
     }

@@ -1,0 +1,58 @@
+---
+import { WlDatabase } from '@webslab/shared/components/database';
+---
+
+<WlDatabase
+  id="wldb-content-stats-info"
+  live={false}
+  target="section"
+  query=""
+  client:only="lit">
+  <div>
+    <h2 class="h3"><u>Overview</u></h2>
+    <section></section>
+  </div>
+
+  <template slot="template" is:raw>
+    {% set module = result[0][0] %}
+
+    <div class="row">
+      <div class="col-12 col-md-4 col-lg-5 text-center">
+        <img
+          class="img-thumbnail"
+          style="min-height: 200px; max-height: 200px; object-fit: cover;"
+          loading="lazy"
+          src="{{ module.hero }}" alt="Placeholder image" />
+      </div>
+
+      <div class="col-12 col-md">
+        <p>Title: <em class="fw-bold">{{ module.title }}</em></p>
+        <p>Author: <em>{{ module.authorName }}</em></p>
+        <p>Likes: <em style="color: var(--bs-pink)">{{ module.likes or 0 }}</em></p>
+        <p>Visits: <em class="text-primary">{{ module.visits or 0 }}</em></p>
+      </div>
+    </div>
+  </template>
+</WlDatabase>
+
+
+<script>
+  import { authService } from '$lib/services/auth.ts'
+  import { waitElement } from '$lib/utils.ts';
+  import { RecordId } from 'surrealdb';
+
+  const contentId = new URLSearchParams(window.location.search).get('id')
+  const contentRecordId = new RecordId(...contentId.split(':'))
+
+  customElements.whenDefined('wl-database').then(async () => {
+    const wlDatabase: HTMLElement = await waitElement('#wldb-content-stats-info')
+    const query = `SELECT *, author.name as authorName FROM ${contentRecordId};`
+
+    if (!contentId || !wlDatabase) {
+      return
+    }
+
+    wlDatabase.query = query
+    wlDatabase.auth = authService
+  })
+</script>

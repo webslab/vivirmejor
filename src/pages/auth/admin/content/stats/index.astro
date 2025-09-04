@@ -1,0 +1,71 @@
+---
+import BaseLayout from '$layouts/Base.astro'
+
+import Info from '$components/admin/content/stats/ContentInfo.astro'
+import Answers from '$components/admin/content/stats/ContentAnswers.tsx'
+---
+
+<BaseLayout
+  auth={true}
+  admin={true}
+  title="Module Stats"
+  description="Modules stats index"
+  back={{enabled: true, path: "/auth/admin/content/module/"}}>
+
+  <div class="mx-2 mt-2">
+    <ul class="nav nav-tabs" role="tablist">
+      <li class="nav-item" role="presentation">
+        <button
+          id="content-stats"
+          class="nav-link active"
+          data-bs-toggle="tab"
+          data-bs-target="#content-stats-pane"
+          type="button"
+          role="tab"
+          aria-controls="content-stats-pane"
+          aria-selected="true">
+          Info
+        </button>
+      </li>
+
+      <li class="nav-item" role="presentation">
+        <button
+          id="content-answers"
+          class="nav-link"
+          data-bs-toggle="tab"
+          data-bs-target="#content-answers-pane"
+          type="button"
+          role="tab"
+          aria-controls="content-answers-pane"
+          aria-selected="false">
+          Cuestionarios
+        </button>
+      </li>
+    </ul>
+
+    <div class="tab-content">
+      <div
+        id="content-stats-pane"
+        class="tab-pane p-4 bg-body border border-top-0 show active"
+        role="tabpanel"
+        tabindex="0">
+
+        <Info />
+      </div>
+
+      <div
+        id="content-answers-pane"
+        class="tab-pane p-4 bg-body border border-top-0"
+        role="tabpanel"
+        tabindex="0">
+
+        <!--<Answers client:only="solid-js" />-->
+        <Answers client:only="solid-js" />
+      </div>
+    </div>
+  </div>
+</BaseLayout>
+
+<script>
+  import "bootstrap/js/dist/tab";
+</script>

@@ -1,6 +1,8 @@
 import { Jodit } from "jodit/es2021/jodit.min.js";
 import defaultOptions from "$lib/services/_editor/options.ts";
-import { MediaObserver } from "$lib/services/_editor/plugins.ts";
+import { MediaObserver, QuestionsObserver } from "$lib/services/_editor/plugins.ts";
+import { QuestionService } from "$lib/services/questions.ts";
+import "$lib/services/_editor/questions.controls.ts";
 
 class Editor {
 	private options: { [key: string]: unknown } = defaultOptions;
@@ -12,11 +14,15 @@ class Editor {
 		this.options.theme = this.getTheme();
 	}
 
-	makeEditor(selector: HTMLElement): Jodit | undefined {
+	makeEditor(selector: HTMLElement, questionsSvc?: QuestionService): Jodit | undefined {
 		if (this.isReady) this.isReady = false;
 		if (this.editor) this.editor.destruct();
 
 		Jodit.plugins.add("mediaObserver", new MediaObserver());
+		if (questionsSvc) {
+			// import("$lib/services/_editor/questions.controls.ts");
+			Jodit.plugins.add("questionObserver", new QuestionsObserver(questionsSvc));
+		}
 
 		try {
 			this.editor = Jodit.make(selector, this.options);

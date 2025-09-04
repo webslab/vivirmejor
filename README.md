@@ -35,7 +35,7 @@ npm install
 ### Install Dependencies:
 
 ```bash
-deno install --node-modules-dir=auto --allow-scripts=npm:sharp,npm:parcel,npm:@parcel/watcher
+deno install --node-modules-dir=auto --allow-scripts=npm:sharp,npm:parcel,npm:@parcel/watcher,npm:node-domexception
 ```
 
 ## Optimizations

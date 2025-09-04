@@ -97,5 +97,5 @@ export default {
 	},
 
 	disablePlugins: ["color", "font", "about", "mobile", "backspace"],
-	// extraButtons: ["question"],
+	extraButtons: ["question"],
 };
