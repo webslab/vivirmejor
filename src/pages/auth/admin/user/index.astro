@@ -19,7 +19,11 @@ main {
   title="Manager"
   description="Users Management"
   back={{enabled: true, path: "/auth/admin/"}}>
-  <div slot="actions">
+  <div slot="actions" class="d-flex flex-wrap align-items-center mb-3 px-xl-2">
+    <button
+      id="download-stats-btn"
+      class="btn btn-success me-2 flex-shrink-1">Export</button>
+
     <button
       data-bs-toggle="modal"
       data-bs-target={`#${modalId}`}
@@ -35,4 +39,40 @@ main {
 
 <script>
   import 'bootstrap/js/dist/modal'
+  import { authService } from '$lib/services/auth.ts'
+
+  document.addEventListener('DOMContentLoaded', async () => {
+    const downloadBtn = document.getElementById('download-stats-btn')
+
+    downloadBtn?.addEventListener('click', async () => {
+      try {
+        downloadBtn.disabled = true
+        downloadBtn.textContent = 'Downloading...'
+
+        await authService.isReady
+        const db = authService.getDb()
+
+        const result = await db.query('SELECT *,module.{id,title},answers.{content,question.{id,content}} FROM paper;')
+
+        const jsonData = JSON.stringify(result, null, 2)
+        const blob = new Blob([jsonData], { type: 'application/json' })
+        const url = URL.createObjectURL(blob)
+
+        const a = document.createElement('a')
+        a.href = url
+        a.download = `user-stats-${new Date().toISOString().split('T')[0]}.json`
+        document.body.appendChild(a)
+        a.click()
+        document.body.removeChild(a)
+        URL.revokeObjectURL(url)
+
+      } catch (error) {
+        console.error('Error downloading stats:', error)
+        alert('Error al descargar las estadísticas')
+      } finally {
+        downloadBtn.disabled = false
+        downloadBtn.textContent = 'Export'
+      }
+    })
+  })
 </script>
