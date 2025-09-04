@@ -8,16 +8,42 @@ type FormProps = {
   modalId: string;
 };
 
+type QuestionType = "text" | "range";
+
+const isTextQuestion = (
+  question: Question,
+): question is Question & { type: "text" } => {
+  return question.type === "text";
+};
+
+const isRangeQuestion = (
+  question: Question,
+): question is Question & { type: "range" } => {
+  return question.type === "range";
+};
+
+const getQuestionConfig = (q: Question) => {
+  if (isTextQuestion(q)) return q.text;
+  if (isRangeQuestion(q)) return q.range;
+  return undefined;
+};
+
 export default function Form(props: FormProps) {
   const question = useStore($question);
-  const [type, setType] = createSignal<string>(question().type);
+  const [type, setType] = createSignal<QuestionType>(
+    question().type as QuestionType,
+  );
 
-  // @ts-ignore: TODO:
-  const max = () => question()[question().type as keyof Question]?.max;
-  // @ts-ignore: TODO:
-  const min = () => question()[question().type as keyof Question]?.min;
-  // @ts-ignore: TODO:
-  const hold = () => question()[question().type as keyof Question]?.hold;
+  const max = () => getQuestionConfig(question())?.max;
+  const min = () => {
+    const q = question();
+    if (isRangeQuestion(q) && q.range) {
+      return q.range.min;
+    }
+    return undefined;
+  };
+
+  const hold = () => getQuestionConfig(question())?.hold;
   const holdType = () => {
     if (type() === "text") return "text";
     if (question().type === "text") return "text";
@@ -31,7 +57,7 @@ export default function Form(props: FormProps) {
   });
 
   const changeType = (e: Event) => {
-    setType((e.target as HTMLInputElement).value);
+    setType((e.target as HTMLInputElement).value as QuestionType);
   };
 
   return (
