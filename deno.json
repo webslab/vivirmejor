@@ -1,6 +1,6 @@
 {
 	"name": "base",
-	"version": "dev",
+	"version": "0.5.5",
 	"tasks": {
 		"dev": "astro dev",
 		"astro": "astro",
