@@ -72,6 +72,7 @@ import Modal from '$components/admin/content/edit/Modal.astro'
   import { WEBSLAB_PROJECT, WEBSLAB_TOKEN } from "$lib/consts.ts";
 
   import { getWlDatabase } from "$lib/utils.ts";
+  import { waitElement } from "$lib/utils.ts";
   import { authService } from "$lib/services/auth.ts";
   import { editor } from "$lib/services/editor.ts";
 
@@ -83,30 +84,54 @@ import Modal from '$components/admin/content/edit/Modal.astro'
   getWlDatabase().then(async (wlDatabase) => {
     import("$lib/hero.ts");
 
-    wlDatabase.addEventListener("wl-task:completed", (evt: CustomEvent) => {
+    wlDatabase.addEventListener("wl-task:completed", async (evt: CustomEvent) => {
+      // Esperar a que todos los elementos críticos estén disponibles
+      await waitElement("#post-content");
+      await waitElement("#title");
+      await waitElement("#author");
+      await waitElement("#publish");
+
       const db = authService.getDb();
 
       const add = document.getElementById("add-page");
       const save = document.getElementById("save");
       const hero = document.getElementById("hero") as HTMLInputElement;
       const title = document.getElementById("title") as HTMLInputElement;
-      const author = document.getElementById("author").dataset;
+      const author = document.getElementById("author")?.dataset;
       const publish = document.getElementById("publish") as HTMLInputElement;
       const content = document.getElementById("post-content") as HTMLTextAreaElement;
       const tableName = document.getElementById("table-name");
       const pagesContainer = document.getElementById("pages-container");
       const toastLiveExample = document.getElementById("liveToast");
 
+      // Verificar que todos los elementos críticos existan
+      if (!content) {
+        console.error("Required element post-content not found");
+        return;
+      }
+      if (!hero || !title || !publish) {
+        console.error("Required form elements not found");
+        return;
+      }
+
       // hero
       const foo = document.getElementById("foo");
       const heroPicker = document.getElementById("heroPicker");
       const heroPreview = document.getElementById("hero-preview") as HTMLImageElement;
-      const heroCurrent = heroPicker.dataset.current;
+      const heroCurrent = heroPicker?.dataset?.current;
 
-      heroPreview.src = heroCurrent;
-      hero.value = heroCurrent;
-      heroPicker.appendChild(foo);
-      foo.classList.remove("d-none");
+      if (heroPreview && heroCurrent) {
+        heroPreview.src = heroCurrent;
+      }
+
+      if (hero && heroCurrent) {
+        hero.value = heroCurrent;
+      }
+
+      if (heroPicker && foo) {
+        heroPicker.appendChild(foo);
+        foo.classList.remove("d-none");
+      }
 
       const questionsSvc = postId.startsWith("module")
         ? new QuestionService(db, "questionModal")
@@ -114,12 +139,17 @@ import Modal from '$components/admin/content/edit/Modal.astro'
 
       const jodit = editor.makeEditor(content, questionsSvc);
 
+      if (!jodit) {
+        console.error("Failed to create Jodit editor");
+        return;
+      }
+
       const table = evt.detail.result[0][0].id.tb;
       const pages = evt.detail.result[0][0].content;
 
       // tableName.innerText = table.charAt(0).toUpperCase() + table.slice(1)
 
-      if (table === "module") {
+      if (table === "module" && pagesContainer) {
         pagesList(pages);
         pagesContainer.classList.remove("d-none");
 
@@ -127,66 +157,76 @@ import Modal from '$components/admin/content/edit/Modal.astro'
         setupPageMoveListeners();
       }
 
-      save.addEventListener("click", savePost);
+      if (save) {
+        save.addEventListener("click", savePost);
+      }
 
-      add.addEventListener("click", () => {
-        const pagesList = document.getElementById("pages-list");
-        const item = document.createElement("li");
+      if (add) {
+        add.addEventListener("click", () => {
+          const pagesList = document.getElementById("pages-list");
+          const item = document.createElement("li");
 
-        item.classList.add("list-group-item");
-        item.dataset.index = pages.length.toString();
-        item.innerHTML = `
-            <div class="d-flex align-items-center">
-              <!-- Botones de reordenamiento -->
-              <div class="btn-group-vertical me-2" role="group">
-                <button class="btn btn-sm btn-outline-secondary move-up" 
-                        style="line-height: 1; padding: 2px 6px; font-size: 10px;">
-                  ↑
-                </button>
-                <button class="btn btn-sm btn-outline-secondary move-down" 
-                        style="line-height: 1; padding: 2px 6px; font-size: 10px;">
-                  ↓
-                </button>
-              </div>
+          item.classList.add("list-group-item");
+          item.dataset.index = pages.length.toString();
+          item.innerHTML = `
+                <div class="d-flex align-items-center">
+                  <!-- Botones de reordenamiento -->
+                  <div class="btn-group-vertical me-2" role="group">
+                    <button class="btn btn-sm btn-outline-secondary move-up"
+                            style="line-height: 1; padding: 2px 6px; font-size: 10px;">
+                      ↑
+                    </button>
+                    <button class="btn btn-sm btn-outline-secondary move-down"
+                            style="line-height: 1; padding: 2px 6px; font-size: 10px;">
+                      ↓
+                    </button>
+                  </div>
 
-              <!-- Contenido existente -->
-              <span class="btn btn-sm btn-outline-secondary flex-grow-1">
-                Page: ${pages.length + 1}
-              </span>
+                  <!-- Contenido existente -->
+                  <span class="btn btn-sm btn-outline-secondary flex-grow-1">
+                    Page: ${pages.length + 1}
+                  </span>
 
-              <!-- Botón eliminar (existente) -->
-              <button
-                id="del-page"
-                class="btn btn-sm btn-outline-danger ms-2">
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-x-lg" viewBox="0 0 16 16">
-                  <path d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8z"/>
-                </svg>
-              </button>
-            </div>`;
+                  <!-- Botón eliminar (existente) -->
+                  <button
+                    id="del-page"
+                    class="btn btn-sm btn-outline-danger ms-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-x-lg" viewBox="0 0 16 16">
+                      <path d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8z"/>
+                    </svg>
+                  </button>
+                </div>`;
 
-        addItemListener(item, pages.length, pages);
-        pagesList.insertBefore(item, add.parentNode);
+          addItemListener(item, pages.length, pages);
+          pagesList.insertBefore(item, add.parentNode);
 
-        // Actualizar botones deshabilitados después de agregar
-        updateMoveButtons();
+          // Actualizar botones deshabilitados después de agregar
+          updateMoveButtons();
 
-        // Hacer click en el span de la nueva página
-        const newPageSpan = item.querySelector("span") as HTMLElement;
-        newPageSpan.click();
-        savePost();
-      });
+          // Hacer click en el span de la nueva página
+          const newPageSpan = item.querySelector("span") as HTMLElement;
+          newPageSpan.click();
+          savePost();
+        });
+      }
 
       async function savePost() {
+        // Verificar que los elementos necesarios existan
+        if (!hero || !title || !publish || !toastLiveExample) {
+          console.error("Required elements not found for savePost");
+          return;
+        }
+
         // Detectar y limpiar elementos wl-question con edit="true" o edit ANTES de guardar
         let hasEditableQuestions = false;
         const editorContent = jodit.currentPlace.editor;
         editorContent.querySelectorAll("wl-question[edit]").forEach((el) => {
-          el.removeAttribute('edit');
+          el.removeAttribute("edit");
           hasEditableQuestions = true;
         });
 
         if (hasEditableQuestions) {
-          console.log('Se detectaron y limpiaron preguntas en modo edición');
+          console.log("Se detectaron y limpiaron preguntas en modo edición");
         }
 
         // Ahora guardar el contenido limpio
@@ -214,6 +254,12 @@ import Modal from '$components/admin/content/edit/Modal.astro'
 
       // Función específica para guardar sin modificar el array pages
       async function savePostDirect() {
+        // Verificar que los elementos necesarios existan
+        if (!hero || !title || !publish || !toastLiveExample) {
+          console.error("Required elements not found for savePostDirect");
+          return;
+        }
+
         const toastBootstrap = Toast.getOrCreateInstance(toastLiveExample);
         toastBootstrap.show();
 
@@ -263,7 +309,7 @@ import Modal from '$components/admin/content/edit/Modal.astro'
 
         // 4. Regenerar UI
         rebuildPagesList();
-        
+
         // 5. Guardar cambios
         savePostDirect();
       }
@@ -396,13 +442,17 @@ import Modal from '$components/admin/content/edit/Modal.astro'
 
           jodit.currentPlace.editor.innerHTML = pages[--currentPage] || "";
 
-          const prev = pagesList.children[currentPage].querySelector("span") as HTMLElement;
+          const prev = pagesList.children[currentPage].querySelector(
+            "span",
+          ) as HTMLElement;
 
           setTimeout(() => {
             prev.click();
             prev.classList.add("active");
 
-            setTimeout(() => { prev.classList.remove("active"); }, 400);
+            setTimeout(() => {
+              prev.classList.remove("active");
+            }, 400);
           }, 100);
         });
 
