@@ -1,8 +1,9 @@
 {
-	"id": 2,
+	"id": 1,
 	"group": 1,
-	"name": "Alice Smith",
-	"position": "Vice President",
-	"department": "Departamento de Personalidad, Evaluación",
-	"photo": "../images/about/as.png"
+	"titulo": "INVESTIGADOR PRINCIPAL (IP)",
+	"name": "Carlos Sala Palau",
+	"position": "Cirujano General y Digestivo. Cirugía Bariátrica y Endocrino-metabólica Doctor en Medicina y Cirugía",
+	"department": "Instituto Valenciano de Cirugía Integral, SL Hospital Quironsalud Valencia y Alicante",
+	"photo": "../images/members/carlossalas.png"
 }

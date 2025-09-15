@@ -1,8 +1,9 @@
 {
 	"id": 1,
 	"group": 1,
-	"name": "John Doe",
-	"position": "President",
-	"department": "Departamento de Personalidad, Evaluación y Tratamientos Psicológicos – UVEG; Miembro red CIBERobn",
-	"photo": "../images/about/jd.png"
+	"titulo": "INVESTIGADORA PRINCIPAL (IP)",
+	"name": "Rosa María Baños Rivera",
+	"position": "Catedrática de Psicopatología",
+	"department": "Instituto Polibienestar Universidad de Valencia. CIBERobn, Instituto Carlos III (B06/03/0052)",
+	"photo": "../images/members/rosa.png"
 }
