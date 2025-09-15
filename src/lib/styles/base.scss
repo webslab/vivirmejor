@@ -77,16 +77,6 @@ $font-family-sans-serif:
   visibility: hidden;
 }
 
-@view-transition {
-  navigation: auto;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  @view-transition {
-    navigation: none;
-  }
-}
-
 // just inside editor
 .jodit-wysiwyg p:has(> img) {
   margin-inline: auto;
@@ -234,3 +224,4 @@ main {
   background-color: var(--bs-primary);
   border-color: var(--bs-primary);
 }
+

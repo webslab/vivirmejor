@@ -1,0 +1,72 @@
+---
+import ModalForm from './_ModalForm.tsx';
+const { modalId } = Astro.props;
+---
+
+<div
+  id={modalId}
+  class="modal modal-lg fade"
+  tabindex="-1"
+  data-bs-backdrop="static"
+  data-bs-keyboard="false"
+  aria-labelledby="questionModalLabel"
+  aria-hidden="true">
+
+  <div class="modal-dialog">
+    <div class="modal-content">
+
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="questionModalLabel">Question Form</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+
+      <div class="modal-body">
+        <form id="questionModalForm">
+          <ModalForm modalId={modalId} formId="questionModalForm" client:only="solid-js" />
+        </form>
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+
+        <button type="submit" form="questionModalForm" class="btn btn-primary">Save changes</button>
+      </div>
+    </div>
+  </div>
+
+  <script is:inline>
+    const modalEl = document.currentScript.parentElement;
+    const formEl = modalEl.querySelector('#questionModalForm');
+
+    formEl.addEventListener('submit', (evt) => {
+      evt.preventDefault()
+
+      const formData = new FormData(formEl);
+      const values = Object.fromEntries(formData)
+
+      let question = {
+        id: values.id,
+        content: values.content,
+        type: values.type,
+      };
+
+      if (values.type === 'text') {
+        question.text = {
+            max: parseInt(values.max) || undefined,
+            hold: values.hold || undefined,
+          }
+
+      } else {
+        question.range = {
+            min: parseInt(values.min),
+            max: parseInt(values.max),
+            hold: parseInt(values.hold) || 0,
+          }
+      }
+
+      modalEl.dispatchEvent(
+        new CustomEvent('result.bs.modal', { detail: { question } })
+      )
+    })
+  </script>
+</div>
