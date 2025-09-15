@@ -10,6 +10,7 @@ const membersCollection = defineCollection({
 		z.object({
 			id: z.number(),
 			group: z.number(),
+			titulo: z.string().optional(),
 			name: z.string(),
 			position: z.string(),
 			department: z.string(),
