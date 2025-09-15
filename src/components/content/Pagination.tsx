@@ -96,7 +96,12 @@ export default function Pagination() {
     if (!findAnswers()) return;
 
     setPage(page() - 1);
-    location.hash = `#post-title`;
+
+    // Scroll suave al inicio de la página
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth",
+    });
   };
 
   const next = () => {
@@ -105,9 +110,12 @@ export default function Pagination() {
     if (!findAnswers()) return;
 
     setPage(page() + 1);
-    // location.hash = `#post-title`;
-    // location.hash = `#article`;
-    location.hash = `article`;
+
+    // Scroll suave al inicio de la página
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth",
+    });
   };
 
   const submit = async () => {
@@ -132,7 +140,7 @@ export default function Pagination() {
         disabled={page() === 1}
         class="btn btn-primary"
       >
-        Prev
+        Anterior
       </button>
 
       <div>
@@ -144,7 +152,7 @@ export default function Pagination() {
         onClick={submit}
         class={page() === pages().length ? "btn btn-primary" : "d-none"}
       >
-        Send
+        Enviar
       </button>
 
       <button
@@ -152,7 +160,7 @@ export default function Pagination() {
         onClick={next}
         class={page() === pages().length ? "d-none" : "btn btn-primary"}
       >
-        Next
+        Siguiente
       </button>
     </div>
   );
