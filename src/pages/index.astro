@@ -3,7 +3,7 @@ import { Image } from 'astro:assets'
 
 import BaseLayout from '$layouts/Base.astro'
 
-import logoP from '$images/logovivirmejor03b.png'
+import logoP from '$images/logovivirmejor03d.png'
 import logoC from '$images/LogoOC.png'
 import logoD from '$images/LogoIpsitec.png'
 import logoE from '$images/LogoPolibienestar.png'
@@ -57,6 +57,20 @@ import logoH from '$images/LogoCiber.png'
   transform: scale(1.05);
 }
 
+/* Texto adaptativo para modo claro/oscuro */
+.adaptive-text {
+  color: var(--bs-body-color);
+}
+
+.subtitle-text {
+  color: #46a2a8;
+}
+
+/* En modo oscuro, mantener el color azul pero más claro */
+[data-bs-theme="dark"] .subtitle-text {
+  color: #5bc0c7;
+}
+
 /* Responsive para logos */
 @media (max-width: 768px) {
   .logo-container img {
@@ -86,7 +100,7 @@ import logoH from '$images/LogoCiber.png'
       sizes={`(max-width: 360px) 240px, (max-width: 720px) 540px, (max-width: 1600px) 720px, ${logoP.width}px`}
       alt="Project Logo"/>
 
-    <p class="h4 text-center mt-4 approach-font" style="color: #46a2a8;">
+    <p class="h4 text-center mt-4 approach-font subtitle-text">
       Un proyecto para impulsar un estilo de vida saludable a través de intervenciones digitales
     </p>
   </section>
@@ -94,14 +108,14 @@ import logoH from '$images/LogoCiber.png'
   <section class="container-fluid px-3 px-md-5 mb-5" style="margin-top: 100px; padding-top: 50px;">
     <div class="row">
       <div class="col-12">
-        <p class="h4 text-dark mb-3 approach-font" style="text-align: justify;">
+        <p class="h4 mb-3 approach-font adaptive-text" style="text-align: justify;">
           La obesidad es mucho más que un problema de peso. Es un gran desafío social, sanitario y personal asociado a dificultades para una vida plena, comorbilidades (diabetes, hipertensión, apnea...).
         </p>
-        <p class="h4 text-dark mb-3 approach-font" style="text-align: justify;">
+        <p class="h4 mb-3 approach-font adaptive-text" style="text-align: justify;">
           Los estudios muestran la importancia de mejorar los estilos de vida saludables como medio clave para combatir la obesidad.
         </p>
-        <p class="h4 text-dark mb-0 approach-font" style="text-align: justify;">
-          <span style="color: #46a2a8; font-weight: bold;">VIVIR MEJOR</span> es un programa de tratamiento diseñado para acompañarte en la implementación y mejora de tu estilo de vida.
+        <p class="h4 mb-0 approach-font adaptive-text" style="text-align: justify;">
+          <span class="subtitle-text" style="font-weight: bold;">VIVIR MEJOR</span> es un programa de tratamiento diseñado para acompañarte en la implementación y mejora de tu estilo de vida.
         </p>
       </div>
     </div>
@@ -110,7 +124,7 @@ import logoH from '$images/LogoCiber.png'
   <section class="container-fluid px-3 px-md-5 mb-5" style="margin-top: 100px; padding-top: 50px;">
     <div class="row">
       <div class="col-12">
-        <p class="h5 text-dark mb-5 approach-font" style="text-align: center; font-weight: 300;">
+        <p class="h5 mb-5 approach-font adaptive-text" style="text-align: center; font-weight: 300;">
           Este proyecto se realiza gracias a la colaboración entre las siguientes entidades
         </p>
       </div>

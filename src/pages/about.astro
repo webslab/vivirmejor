@@ -13,6 +13,58 @@ const groupTwo = await getCollection('members', ({ data }) => {
 })
 ---
 
+<style>
+/* Colores adaptativos para modo claro/oscuro */
+.member-title {
+  color: #46a2a8;
+}
+
+.member-name {
+  font-weight: bold;
+  color: var(--bs-body-color);
+}
+
+.member-position {
+  font-weight: bold;
+  color: var(--bs-body-color);
+}
+
+.member-department {
+  color: var(--bs-body-color);
+}
+
+.group-two-title {
+  color: #46a2a8;
+}
+
+.group-two-name {
+  font-weight: bold;
+  color: #46a2a8;
+}
+
+.group-two-position {
+  color: #46a2a8;
+  font-weight: bold;
+}
+
+/* Ajustes para modo oscuro */
+[data-bs-theme="dark"] .member-title {
+  color: #46a2a8;
+}
+
+[data-bs-theme="dark"] .group-two-title {
+  color: #46a2a8;
+}
+
+[data-bs-theme="dark"] .group-two-name {
+  color: #46a2a8;
+}
+
+[data-bs-theme="dark"] .group-two-position {
+  color: #46a2a8;
+}
+</style>
+
 <BaseLayout
   auth={false}
   admin={false}
@@ -32,10 +84,10 @@ const groupTwo = await getCollection('members', ({ data }) => {
             width={300}
             height={250}
           />
-          <h3 class="h5 mb-2" style="color: #46a2a8;">{member.data.titulo}</h3>
-          <h4 class="h5" style="font-weight: bold;">{member.data.name}</h4>
-          <p class="text-dark" style="font-weight: bold;">{member.data.position}</p>
-          <p class="small">{member.data.department}</p>
+          <h3 class="h5 mb-2 member-title">{member.data.titulo}</h3>
+          <h4 class="h5 member-name">{member.data.name}</h4>
+          <p class="member-position">{member.data.position}</p>
+          <p class="small member-department">{member.data.department}</p>
         </div>
       ))}
     </div>
@@ -56,10 +108,10 @@ const groupTwo = await getCollection('members', ({ data }) => {
             width={200}
             height={180}
           />
-          <h3 class="h6 mb-1" style="color: #46a2a8;">{member.data.titulo}</h3>
-          <h4 class="h6" style="font-weight: bold; color: #46a2a8;">{member.data.name}</h4>
-          <p class="small" style="color: #46a2a8; font-weight: bold;">{member.data.position}</p>
-          <p class="small">{member.data.department}</p>
+          <h3 class="h6 mb-1 group-two-title">{member.data.titulo}</h3>
+          <h4 class="h6 group-two-name">{member.data.name}</h4>
+          <p class="small group-two-position">{member.data.position}</p>
+          <p class="small member-department">{member.data.department}</p>
         </div>
       ))}
     </div>

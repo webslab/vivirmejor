@@ -61,8 +61,23 @@ li a p {
   font-size: 1.5rem;
 }
 
+/* Mejorar color para modo oscuro */
+[data-bs-theme="dark"] li a p {
+  color: #46a2a8;
+}
+
 li a:hover p {
   color: #46a2a8;
+}
+
+/* Color hover también adaptado para modo oscuro */
+[data-bs-theme="dark"] li a:hover p {
+  color: #46a2a8;
+}
+
+/* Mejorar sombra en modo oscuro */
+[data-bs-theme="dark"] li a:hover img {
+  box-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
 }
 </style>
 
