@@ -67,7 +67,7 @@ export default function Pagination() {
     );
 
     if (!allValid) {
-      alert("Porfavor, responde todas las preguntas antes de continuar.");
+      alert("Por favor, responde todas las preguntas antes de continuar.");
       return false;
     }
 
