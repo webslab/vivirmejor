@@ -24,11 +24,19 @@ const { back, auth = true, admin = true, title, description } = Astro.props;
 <html
   data-bs-theme="light"
   lang="es">
-	<head>
-		<Head title={title || SITE_TITLE} description={description || SITE_DESCRIPTION} />
-	</head>
+    <head>
+        <Head title={title || SITE_TITLE} description={description || SITE_DESCRIPTION} />
+    </head>
 
   <body>
+    <!-- Agregar este bloque de estilo aquí -->
+    <style is:global>
+      /* Espacio para la navbar fija en todas las páginas */
+      body {
+        padding-top: 66px;
+      }
+    </style>
+
     <header>
       <Navbar loginSelector={'#' + modalLogin} />
       <ModalLogin selector={modalLogin} />
