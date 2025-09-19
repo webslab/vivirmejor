@@ -93,7 +93,7 @@ export default function Pagination() {
   const prev = () => {
     if (page() === 1) return;
     if (paperSvc()) paperSvc()!.prev(page());
-    if (!findAnswers()) return;
+    /* if (!findAnswers()) return; */
 
     setPage(page() - 1);
 
