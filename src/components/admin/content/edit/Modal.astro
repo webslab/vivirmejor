@@ -54,6 +54,7 @@ const { modalId } = Astro.props;
         question.text = {
             max: parseInt(values.max) || undefined,
             hold: values.hold || undefined,
+            required: values.required === 'on',
           }
 
       } else {
@@ -61,6 +62,7 @@ const { modalId } = Astro.props;
             min: parseInt(values.min),
             max: parseInt(values.max),
             hold: parseInt(values.hold) || 0,
+            required: values.required === 'on',
           }
       }
 

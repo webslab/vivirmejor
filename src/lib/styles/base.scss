@@ -75,6 +75,10 @@ jodit:has(.article-video) {
   margin-inline: auto;
 }
 
+div:has(> wl-question.invalid) {
+  border-left: 4px solid $danger;
+}
+
 .article-video {
   display: inline-block !important;
 

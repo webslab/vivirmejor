@@ -34,6 +34,7 @@ export default function Form(props: FormProps) {
     question().type as QuestionType,
   );
 
+  const required = () => getQuestionConfig(question())?.required;
   const max = () => getQuestionConfig(question())?.max;
   const min = () => {
     const q = question();
@@ -64,35 +65,53 @@ export default function Form(props: FormProps) {
     <>
       <input type="hidden" name="id" value={question().id?.toString()} />
 
-      <fieldset class="mb-3">
-        <legend class="text-center">Type</legend>
+      <div class="row mb-3">
+        <fieldset class="col-md-6">
+          <legend class="text-center">Type</legend>
 
-        <div class="d-flex justify-content-evenly">
-          <label>
-            <input
-              onChange={changeType}
-              checked={question().type === "text"}
-              class="me-2 form-check-input"
-              type="radio"
-              name="type"
-              value="text"
-            />
-            Text
-          </label>
+          <div class="d-flex justify-content-evenly">
+            <label>
+              <input
+                onChange={changeType}
+                checked={question().type === "text"}
+                class="me-2 form-check-input"
+                type="radio"
+                name="type"
+                value="text"
+              />
+              Text
+            </label>
 
-          <label class="form-check-label">
-            <input
-              onChange={changeType}
-              checked={question().type === "range"}
-              class="me-2 form-check-input"
-              type="radio"
-              name="type"
-              value="range"
-            />
-            Range
-          </label>
-        </div>
-      </fieldset>
+            <label class="form-check-label">
+              <input
+                onChange={changeType}
+                checked={question().type === "range"}
+                class="me-2 form-check-input"
+                type="radio"
+                name="type"
+                value="range"
+              />
+              Range
+            </label>
+          </div>
+        </fieldset>
+
+        <fieldset class="col-md-6">
+          <legend class="text-center">Required</legend>
+
+          <div class="d-flex justify-content-center">
+            <label class="form-check">
+              <input
+                class="form-check-input"
+                type="checkbox"
+                name="required"
+                checked={required()}
+              />
+              <span class="form-check-label">This question is required</span>
+            </label>
+          </div>
+        </fieldset>
+      </div>
 
       <fieldset class="mb-3">
         <legend>Content</legend>
@@ -118,7 +137,6 @@ export default function Form(props: FormProps) {
               disabled={
                 question().type === "text" &&
                 (type() === undefined || type() === "text")
-                // TODO: ??
               }
               value={min()}
             />

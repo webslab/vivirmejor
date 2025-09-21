@@ -13,6 +13,7 @@ export class QuestionService extends _QuestionService {
 
 	constructor(db: Surreal, modalId: string) {
 		super(db);
+
 		this.modal = new Modal(document.getElementById(modalId));
 	}
 
@@ -51,7 +52,8 @@ export class QuestionService extends _QuestionService {
 		const questionElement = document.querySelector(`wl-question[qid="${question.id}"]`);
 		if (questionElement) {
 			// Buscar el div padre con clase form-control
-			const parentDiv = questionElement.closest('div.form-control');
+			const parentDiv = questionElement.closest("div.form-control");
+
 			if (parentDiv) {
 				// Eliminar el div padre completo
 				parentDiv.remove();
@@ -59,6 +61,7 @@ export class QuestionService extends _QuestionService {
 				// Si no hay div padre, eliminar solo la pregunta
 				questionElement.remove();
 			}
+
 			return question;
 		}
 	}
