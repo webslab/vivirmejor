@@ -217,16 +217,22 @@ import Modal from '$components/admin/content/edit/Modal.astro'
           return;
         }
 
-        // Detectar y limpiar elementos wl-question con edit="true" o edit ANTES de guardar
         let hasEditableQuestions = false;
+        let hasUserTouched = false;
+
         const editorContent = jodit.currentPlace.editor;
         editorContent.querySelectorAll("wl-question[edit]").forEach((el) => {
           el.removeAttribute("edit");
           hasEditableQuestions = true;
         });
 
-        if (hasEditableQuestions) {
-          console.log("Se detectaron y limpiaron preguntas en modo edición");
+        editorContent.querySelectorAll("wl-question[usertouched]").forEach((el) => {
+          el.removeAttribute("usertouched");
+          hasUserTouched = true;
+        });
+
+        if (hasEditableQuestions || hasUserTouched) {
+          console.log("Se detectaron y limpiaron parámetros en preguntas");
         }
 
         // Ahora guardar el contenido limpio
