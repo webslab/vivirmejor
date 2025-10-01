@@ -67,7 +67,7 @@ export default function Pagination() {
     );
 
     if (!allValid) {
-      alert("Por favor, responde todas las preguntas antes de continuar.");
+      alert("Please fill all the questions");
       return false;
     }
 
@@ -93,15 +93,10 @@ export default function Pagination() {
   const prev = () => {
     if (page() === 1) return;
     if (paperSvc()) paperSvc()!.prev(page());
-    /* if (!findAnswers()) return; */
+    if (!findAnswers()) return;
 
     setPage(page() - 1);
-
-    // Scroll suave al inicio de la página
-    window.scrollTo({
-      top: 0,
-      behavior: "smooth",
-    });
+    location.hash = `#post-title`;
   };
 
   const next = () => {
@@ -110,12 +105,9 @@ export default function Pagination() {
     if (!findAnswers()) return;
 
     setPage(page() + 1);
-
-    // Scroll suave al inicio de la página
-    window.scrollTo({
-      top: 0,
-      behavior: "smooth",
-    });
+    // location.hash = `#post-title`;
+    // location.hash = `#article`;
+    location.hash = `article`;
   };
 
   const submit = async () => {
@@ -140,7 +132,7 @@ export default function Pagination() {
         disabled={page() === 1}
         class="btn btn-primary"
       >
-        Anterior
+        Prev
       </button>
 
       <div>
@@ -152,7 +144,7 @@ export default function Pagination() {
         onClick={submit}
         class={page() === pages().length ? "btn btn-primary" : "d-none"}
       >
-        Enviar
+        Send
       </button>
 
       <button
@@ -160,7 +152,7 @@ export default function Pagination() {
         onClick={next}
         class={page() === pages().length ? "d-none" : "btn btn-primary"}
       >
-        Siguiente
+        Next
       </button>
     </div>
   );

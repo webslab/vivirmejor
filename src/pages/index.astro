@@ -3,95 +3,16 @@ import { Image } from 'astro:assets'
 
 import BaseLayout from '$layouts/Base.astro'
 
-import logoP from '$images/logovivirmejor03d.png'
-import logoC from '$images/LogoOC.png'
-import logoD from '$images/LogoIpsitec.png'
-import logoE from '$images/LogoPolibienestar.png'
-import logoF from '$images/logouv.png'
-import logoG from '$images/LogoUJI.png'
-import logoH from '$images/LogoCiber.png'
+import logoP from '$images/logo-base-1080_1080.png'
+import logoC from '$images/logo-conselleria-rgb_rojo_cast.png'
 ---
-
-<style>
-@font-face {
-  font-family: 'Approach';
-  src: url('/fonts/Approach-Regular.otf') format('opentype');
-  font-weight: 400;
-  font-style: normal;
-}
-
-@font-face {
-  font-family: 'Approach';
-  src: url('/fonts/Approach-Medium.otf') format('opentype');
-  font-weight: 500;
-  font-style: normal;
-}
-
-@font-face {
-  font-family: 'Approach';
-  src: url('/fonts/Approach-Bold.otf') format('opentype');
-  font-weight: 700;
-  font-style: normal;
-}
-
-@font-face {
-  font-family: 'Approach';
-  src: url('/fonts/Approach-Light.otf') format('opentype');
-  font-weight: 300;
-  font-style: normal;
-}
-
-.approach-font {
-  font-family: 'Approach', sans-serif;
-}
-
-.logo-container img {
-  max-height: 120px;
-  width: auto;
-  filter: grayscale(20%);
-  transition: all 0.3s ease;
-}
-
-.logo-container img:hover {
-  filter: grayscale(0%);
-  transform: scale(1.05);
-}
-
-/* Texto adaptativo para modo claro/oscuro */
-.adaptive-text {
-  color: var(--bs-body-color);
-}
-
-.subtitle-text {
-  color: #46a2a8;
-}
-
-/* En modo oscuro, mantener el color azul pero más claro */
-[data-bs-theme="dark"] .subtitle-text {
-  color: #5bc0c7;
-}
-
-/* Responsive para logos */
-@media (max-width: 768px) {
-  .logo-container img {
-    max-height: 90px;
-  }
-}
-
-@media (max-width: 480px) {
-  .logo-container img {
-    max-height: 70px;
-  }
-}
-</style>
 
 <BaseLayout
   auth={false}
   admin={false}
-  title="Te damos la bienvenida a"
+  title="Welcome to Base"
   description="Home page">
-
-  <section class="col col-md-8 mx-auto mb-5">
+  <section class="col col-md-6 mx-auto">
     <Image
       class="img-fluid ratio ratio-1x1"
       src={logoP}
@@ -99,107 +20,24 @@ import logoH from '$images/LogoCiber.png'
       widths={[240, 540, 720, logoP.width]}
       sizes={`(max-width: 360px) 240px, (max-width: 720px) 540px, (max-width: 1600px) 720px, ${logoP.width}px`}
       alt="Project Logo"/>
-
-    <p class="h4 text-center mt-4 approach-font subtitle-text">
-      Un proyecto para impulsar un estilo de vida saludable a través de intervenciones digitales
-    </p>
   </section>
 
-  <section class="container-fluid px-3 px-md-5 mb-5" style="margin-top: 100px; padding-top: 50px;">
-    <div class="row">
-      <div class="col-12">
-        <p class="h4 mb-3 approach-font adaptive-text" style="text-align: justify;">
-          La obesidad es mucho más que un problema de peso. Es un gran desafío social, sanitario y personal asociado a dificultades para una vida plena, comorbilidades (diabetes, hipertensión, apnea...).
-        </p>
-        <p class="h4 mb-3 approach-font adaptive-text" style="text-align: justify;">
-          Los estudios muestran la importancia de mejorar los estilos de vida saludables como medio clave para combatir la obesidad.
-        </p>
-        <p class="h4 mb-0 approach-font adaptive-text" style="text-align: justify;">
-          <span class="subtitle-text" style="font-weight: bold;">VIVIR MEJOR</span> es un programa de tratamiento diseñado para acompañarte en la implementación y mejora de tu estilo de vida.
-        </p>
-      </div>
-    </div>
-  </section>
-
-  <section class="container-fluid px-3 px-md-5 mb-5" style="margin-top: 100px; padding-top: 50px;">
-    <div class="row">
-      <div class="col-12">
-        <p class="h5 mb-5 approach-font adaptive-text" style="text-align: center; font-weight: 300;">
-          Este proyecto se realiza gracias a la colaboración entre las siguientes entidades
-        </p>
-      </div>
+  <div class="row">
+    <div class="col-6 col-md-3 col-lg-3 mx-auto">
+      <Image
+        class="img-fluid ratio ratio-16x9"
+        src={logoC}
+        format={'webp'}
+        widths={[240, 540, logoC.width]}
+        sizes={`(max-width: 360px) 240px, (max-width: 1600px) 540px, ${logoC.width}px`}
+        alt="Project Logo"/>
     </div>
 
-    <!-- Primera fila -->
-    <div class="row justify-content-center align-items-center g-4 mb-4">
-      <div class="col-6 col-md-4 text-center logo-container">
-        <Image
-          class="img-fluid"
-          src={logoC}
-          format={'webp'}
-          widths={[240, 540, logoC.width]}
-          sizes={`(max-width: 360px) 240px, (max-width: 1600px) 540px, ${logoC.width}px`}
-          alt="Logo Obesity Center"
-        />
-      </div>
-
-      <div class="col-6 col-md-4 text-center logo-container">
-        <Image
-          class="img-fluid"
-          src={logoD}
-          format={'webp'}
-          widths={[240, 540, logoD.width]}
-          sizes={`(max-width: 360px) 240px, (max-width: 1600px) 540px, ${logoD.width}px`}
-          alt="Logo Ipsitec"
-        />
-      </div>
-
-      <div class="col-6 col-md-4 text-center logo-container">
-        <Image
-          class="img-fluid"
-          src={logoE}
-          format={'webp'}
-          widths={[240, 540, logoE.width]}
-          sizes={`(max-width: 360px) 240px, (max-width: 1600px) 540px, ${logoE.width}px`}
-          alt="Logo Polibienestar"
-        />
-      </div>
+    <div class="col-6 col-md-3 col-lg-3 mx-auto bg-warning">
     </div>
 
-    <!-- Segunda fila -->
-    <div class="row justify-content-center align-items-center g-4">
-      <div class="col-6 col-md-4 text-center logo-container">
-        <Image
-          class="img-fluid"
-          src={logoF}
-          format={'webp'}
-          widths={[240, 540, logoF.width]}
-          sizes={`(max-width: 360px) 240px, (max-width: 1600px) 540px, ${logoF.width}px`}
-          alt="Logo UV"
-        />
-      </div>
-
-      <div class="col-6 col-md-4 text-center logo-container">
-        <Image
-          class="img-fluid"
-          src={logoG}
-          format={'webp'}
-          widths={[240, 540, logoG.width]}
-          sizes={`(max-width: 360px) 240px, (max-width: 1600px) 540px, ${logoG.width}px`}
-          alt="Logo UJI"
-        />
-      </div>
-
-      <div class="col-6 col-md-4 text-center logo-container">
-        <Image
-          class="img-fluid"
-          src={logoH}
-          format={'webp'}
-          widths={[240, 540, logoH.width]}
-          sizes={`(max-width: 360px) 240px, (max-width: 1600px) 540px, ${logoH.width}px`}
-          alt="Logo Ciber"
-        />
-      </div>
+    <div class="col mx-auto bg-primary">
+      f
     </div>
-  </section>
+  </div>
 </BaseLayout>
