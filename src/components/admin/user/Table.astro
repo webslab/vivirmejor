@@ -6,7 +6,7 @@ import PlaceHolder from './_TableHolder.astro'
 <WlDatabase
   live={true}
   target="tbody"
-  query="SELECT time::format(auth_until, '%d-%m-%Y') as auth_until, * FROM user;"
+  query="SELECT *, time::format(auth_until, '%d-%m-%Y') as auth_until, name.lowercase() as name_lower FROM user ORDER BY name_lower;"
   client:only="lit">
 
   <PlaceHolder />
