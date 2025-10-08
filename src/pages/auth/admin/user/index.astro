@@ -52,7 +52,7 @@ main {
         await authService.isReady
         const db = authService.getDb()
 
-        const result = await db.query('SELECT *,module.{id,title},answers.{content,question.{id,content}} FROM paper;')
+        const result = await db.query('SELECT *,module.{id,title},answers.{content,question.*},user.{id,name} FROM paper ORDER BY created;')
 
         const jsonData = JSON.stringify(result, null, 2)
         const blob = new Blob([jsonData], { type: 'application/json' })

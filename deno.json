@@ -1,6 +1,6 @@
 {
 	"name": "vivirmejor",
-	"version": "0.7.1",
+	"version": "0.8.0",
 	"tasks": {
 		"dev": "astro dev",
 		"astro": "astro",
