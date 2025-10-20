@@ -16,7 +16,7 @@ import BaseLayout from '$layouts/Base.astro'
 <BaseLayout
   auth={true}
   admin={true}
-  title="Admin"
+  title="Administrar"
   description="Admin navigation">
 
   <!--     <li class="list-group-item list-group-item-action py-1 px-2"> -->
@@ -26,8 +26,10 @@ import BaseLayout from '$layouts/Base.astro'
   <!--     </li> -->
 
   <div class="row">
-    <div class="col-12 col-md-6 offset-md-3 mt-3">
+    <div class="col-12 col-md-6 offset-md-3" style="margin-top: 95px; margin-bottom: 120px;"> <!-- Agregado margin-bottom -->
 
+      <!-- Blog Manager - Comentado temporalmente -->
+      <!--
       <a href="/auth/admin/content/post/">
         <div class="card mb-3 shadow">
           <div class="card-body">
@@ -53,9 +55,10 @@ import BaseLayout from '$layouts/Base.astro'
           </div>
         </div>
       </a>
+      -->
 
       <a href="/auth/admin/content/module/">
-        <div class="card mb-3 shadow">
+        <div class="card mb-5 shadow">
           <div class="card-body">
             <div class="row">
               <div class="col-3 text-center text-primary">
@@ -72,7 +75,7 @@ import BaseLayout from '$layouts/Base.astro'
 
               <div class="col">
                 <p clas="card-text">
-                  Modules manager
+                  Administrador de módulos
                 </p>
               </div>
             </div>
@@ -81,7 +84,7 @@ import BaseLayout from '$layouts/Base.astro'
       </a>
 
       <a href="/auth/admin/user/">
-        <div class="card mb-3 shadow">
+        <div class="card mb-5 shadow">
           <div class="card-body">
             <div class="row">
               <div class="col-3 text-center text-primary">
@@ -98,7 +101,7 @@ import BaseLayout from '$layouts/Base.astro'
 
               <div class="col">
                 <p clas="card-text">
-                  User administrator
+                  Gestión de usuarios
                 </p>
               </div>
             </div>
