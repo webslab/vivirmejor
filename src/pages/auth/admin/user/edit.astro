@@ -143,8 +143,7 @@ import BaseLayout from '$layouts/Base.astro'
           SELECT *,
             author.name as author,
             !(SELECT VALUE id FROM grants WHERE out = $parent.id AND in = ${userId}).is_empty() AS granted
-              FROM module
-          ORDER BY title ASC;
+              FROM module;
         `;
 
         if (!userId || !wlDatabase) {

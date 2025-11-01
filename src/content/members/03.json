@@ -1,8 +1,8 @@
 {
 	"id": 3,
 	"group": 2,
-	"name": "María del Carmen Díaz",
-	"position": "Licenciada en Nutrición Clínica Nutricionista de la Unidad de Obesidad",
-	"department": "Hospital Quironsalud Alicante",
-	"photo": "../images/members/maricarmen.png"
+	"name": "Bob Johnson",
+	"position": "Manager",
+	"department": "Marketing",
+	"photo": "../images/about/bj.png"
 }

@@ -1,19 +1,12 @@
 ---
 import { WlDatabase } from '@webslab/shared/components/database';
 import PlaceHolder from './_TableHolder.astro'
-
-const query_list_users = `
-  SELECT
-    *,
-    time::format(auth_until, '%d-%m-%Y') as auth_until,
-    username.lowercase() as username_lower
-  FROM user ORDER BY username_lower;`
 ---
 
 <WlDatabase
   live={true}
   target="tbody"
-  query={query_list_users}
+  query="SELECT time::format(auth_until, '%d-%m-%Y') as auth_until, * FROM user;"
   client:only="lit">
 
   <PlaceHolder />
@@ -126,16 +119,8 @@ const query_list_users = `
               break
 
             case 'delete':
-              if (confirm('Are you sure?\nThis will remove the user and related papers permanently.')) {
-                db
-                  .query(`DELETE paper WHERE user = ${id};`)
-                  .then((res) => {
-                    db.query(`DELETE ${id};`);
-
-                    console.log('Papers deleted', res[0]);
-                    console.log('User deleted', id);
-                  });
-              }
+              // if (confirm('Are you sure?')) db.delete(record);
+              console.log('delete', id);
               break
 
             case 'role':
