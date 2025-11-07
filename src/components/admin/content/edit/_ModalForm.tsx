@@ -65,52 +65,76 @@ export default function Form(props: FormProps) {
     <>
       <input type="hidden" name="id" value={question().id?.toString()} />
 
-      <div class="row mb-3">
-        <fieldset class="col-md-6">
-          <legend class="text-center">Type</legend>
+      <div class="row mb-4 g-3">
+        <div class="col-lg-4">
+          <div class="card h-100">
+            <div class="card-body">
+              <h6 class="card-title text-center mb-3">Type</h6>
+              <div class="btn-group w-100" role="group">
+                <input
+                  type="radio"
+                  class="btn-check"
+                  name="type"
+                  id="type-text"
+                  value="text"
+                  checked={question().type === "text"}
+                  onChange={changeType}
+                />
+                <label class="btn btn-outline-primary" for="type-text">
+                  Text
+                </label>
 
-          <div class="d-flex justify-content-evenly">
-            <label>
-              <input
-                onChange={changeType}
-                checked={question().type === "text"}
-                class="me-2 form-check-input"
-                type="radio"
-                name="type"
-                value="text"
-              />
-              Text
-            </label>
-
-            <label class="form-check-label">
-              <input
-                onChange={changeType}
-                checked={question().type === "range"}
-                class="me-2 form-check-input"
-                type="radio"
-                name="type"
-                value="range"
-              />
-              Range
-            </label>
+                <input
+                  type="radio"
+                  class="btn-check"
+                  name="type"
+                  id="type-range"
+                  value="range"
+                  checked={question().type === "range"}
+                  onChange={changeType}
+                />
+                <label class="btn btn-outline-primary" for="type-range">
+                  Range
+                </label>
+              </div>
+            </div>
           </div>
-        </fieldset>
+        </div>
 
-        <fieldset class="col-md-6">
-          <legend class="text-center">Required</legend>
-
-          <div class="d-flex justify-content-center">
-            <label class="form-check">
-              <input
-                class="form-check-input"
-                type="checkbox"
-                name="required"
-                checked={required()}
-              />
-              <span class="form-check-label">This question is required</span>
-            </label>
+        <div class="col-lg-4">
+          <div class="card h-100">
+            <div class="card-body">
+              <h6 class="card-title text-center mb-3">Required</h6>
+              <div class="form-check form-switch d-flex justify-content-center">
+                <input
+                  class="form-check-input"
+                  type="checkbox"
+                  name="required"
+                  checked={required()}
+                  id="required-switch"
+                />
+                <label class="form-check-label ms-2" for="required-switch">
+                  Required field
+                </label>
+              </div>
+            </div>
           </div>
-        </fieldset>
+        </div>
+
+        <div class="col-lg-4">
+          <div class="card h-100">
+            <div class="card-body">
+              <h6 class="card-title text-center mb-3">Reference</h6>
+              <input
+                class="form-control"
+                type="text"
+                name="reference"
+                placeholder="Reference ID"
+                value={question().reference ?? ""}
+              />
+            </div>
+          </div>
+        </div>
       </div>
 
       <fieldset class="mb-3">
@@ -158,7 +182,7 @@ export default function Form(props: FormProps) {
               class="d-block form-control"
               type={holdType()}
               name="hold"
-              value={hold()}
+              value={hold() ?? ""}
             />
           </label>
         </div>
