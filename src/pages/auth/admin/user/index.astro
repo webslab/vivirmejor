@@ -20,9 +20,23 @@ main {
   description="Users Management"
   back={{enabled: true, path: "/auth/admin/"}}>
   <div slot="actions" class="d-flex flex-wrap align-items-center mb-3 px-xl-2">
-    <button
-      id="download-stats-btn"
-      class="btn btn-success me-2 flex-shrink-1">Export</button>
+    <div class="btn-group me-2 flex-shrink-1" role="group">
+      <button
+        id="download-stats-btn"
+        type="button"
+        class="btn btn-success">Export</button>
+      <button
+        type="button"
+        class="btn btn-success dropdown-toggle dropdown-toggle-split"
+        data-bs-toggle="dropdown"
+        aria-expanded="false">
+        <span class="visually-hidden">Toggle format options</span>
+      </button>
+      <ul class="dropdown-menu">
+        <li><a class="dropdown-item" href="#" data-format="json">JSON</a></li>
+        <li><a class="dropdown-item" href="#" data-format="csv">CSV</a></li>
+      </ul>
+    </div>
 
     <button
       data-bs-toggle="modal"
@@ -39,39 +53,51 @@ main {
 
 <script>
   import 'bootstrap/js/dist/modal'
+  import 'bootstrap/js/dist/dropdown'
+
   import { authService } from '$lib/services/auth.ts'
+  import { exportData, type ExportFormat } from '$lib/services/export-utils.ts'
 
   document.addEventListener('DOMContentLoaded', async () => {
-    const downloadBtn = document.getElementById('download-stats-btn')
+    const downloadBtn = document.getElementById('download-stats-btn') as HTMLButtonElement | null
+    if (!downloadBtn) return
 
-    downloadBtn?.addEventListener('click', async () => {
+    let selectedFormat: ExportFormat = 'json'
+
+    // Manejar selección de formato en el dropdown
+    const formatLinks = document.querySelectorAll('[data-format]')
+    formatLinks.forEach((link) => {
+      link.addEventListener('click', (e) => {
+        e.preventDefault()
+        const target = e.target as HTMLElement
+        selectedFormat = target.getAttribute('data-format') as ExportFormat
+        downloadBtn.textContent = `Export ${selectedFormat.toUpperCase()}`
+      })
+    })
+
+    // Manejar click en el botón de export
+    downloadBtn.addEventListener('click', async () => {
       try {
         downloadBtn.disabled = true
+        const originalText = downloadBtn.textContent
         downloadBtn.textContent = 'Downloading...'
 
         await authService.isReady
         const db = authService.getDb()
 
-        const result = await db.query('SELECT *,module.{id,title},answers.{content,question.*},user.{id,name} FROM paper ORDER BY created;')
+        const result = await db.query('SELECT *,module.{id,title},answers.{content,question.*},user.{id,name,username} FROM paper ORDER BY created;')
 
-        const jsonData = JSON.stringify(result, null, 2)
-        const blob = new Blob([jsonData], { type: 'application/json' })
-        const url = URL.createObjectURL(blob)
-
-        const a = document.createElement('a')
-        a.href = url
-        a.download = `user-stats-${new Date().toISOString().split('T')[0]}.json`
-        document.body.appendChild(a)
-        a.click()
-        document.body.removeChild(a)
-        URL.revokeObjectURL(url)
+        // Usar la función de export según el formato seleccionado
+        // usePivotedCSV = true para formato pivotado (cada reference es una columna)
+        // Si quieres cambiar a formato compacto (answers como JSON), cambia a false
+        await exportData(result, selectedFormat, 'user-stats', true)
 
       } catch (error) {
         console.error('Error downloading stats:', error)
         alert('Error al descargar las estadísticas')
       } finally {
         downloadBtn.disabled = false
-        downloadBtn.textContent = 'Export'
+        downloadBtn.textContent = selectedFormat === 'json' ? 'Export' : `Export ${selectedFormat.toUpperCase()}`
       }
     })
   })
