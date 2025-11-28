@@ -12,11 +12,18 @@ interface Answer {
 	question?: Question;
 }
 
+interface Action {
+	name: string;
+	time: string;
+	current?: number;
+}
+
 interface PaperData {
 	[key: string]: unknown;
 	module?: { id: string; title: string };
 	answers?: Answer[];
 	user?: { id: string; name: string; username: string };
+	actions?: Action[];
 }
 
 interface FlattenedRow {
@@ -26,6 +33,7 @@ interface FlattenedRow {
 	user_id: string | null;
 	user_name: string | null;
 	user_username: string | null;
+	performance_time: string | null;
 }
 
 /**
@@ -37,7 +45,29 @@ function flattenToRows(data: PaperData[]): FlattenedRow[] {
 	const rows: FlattenedRow[] = [];
 
 	for (const paper of data) {
-		const { module, answers, user, ...paperFields } = paper;
+		const { module, answers, user, actions, ...paperFields } = paper;
+
+		// Calcular tiempo total de desempeño
+		let performanceTime: string | null = null;
+		if (actions && actions.length > 0) {
+			const startAction = actions.find((action) => action.name === "start");
+			const submitAction = actions.find((action) => action.name === "submit");
+
+			if (startAction && submitAction) {
+				const startTime = new Date(startAction.time);
+				const submitTime = new Date(submitAction.time);
+				const diffMs = submitTime.getTime() - startTime.getTime();
+
+				// Formatear como HH:MM:SS
+				const hours = Math.floor(diffMs / (1000 * 60 * 60));
+				const minutes = Math.floor((diffMs % (1000 * 60 * 60)) / (1000 * 60));
+				const seconds = Math.floor((diffMs % (1000 * 60)) / 1000);
+
+				performanceTime = `${hours.toString().padStart(2, "0")}:${
+					minutes.toString().padStart(2, "0")
+				}:${seconds.toString().padStart(2, "0")}`;
+			}
+		}
 
 		// Crear objeto base con datos del paper
 		const row: FlattenedRow = {
@@ -47,10 +77,8 @@ function flattenToRows(data: PaperData[]): FlattenedRow[] {
 			user_id: user?.id || null,
 			user_name: user?.name || null,
 			user_username: user?.username || null,
+			performance_time: performanceTime,
 		};
-
-		// NOTE: Eliminar acciones si existen
-		delete row.actions;
 
 		// Mapear cada respuesta a su columna según reference
 		// Contador para manejar referencias duplicadas
@@ -87,7 +115,29 @@ function flattenToRows(data: PaperData[]): FlattenedRow[] {
  */
 function flattenToSingleRow(data: PaperData[]): FlattenedRow[] {
 	return data.map((paper) => {
-		const { module, answers, user, ...paperFields } = paper;
+		const { module, answers, user, actions, ...paperFields } = paper;
+
+		// Calcular tiempo total de desempeño
+		let performanceTime: string | null = null;
+		if (actions && actions.length > 0) {
+			const startAction = actions.find((action) => action.name === "start");
+			const submitAction = actions.find((action) => action.name === "submit");
+
+			if (startAction && submitAction) {
+				const startTime = new Date(startAction.time);
+				const submitTime = new Date(submitAction.time);
+				const diffMs = submitTime.getTime() - startTime.getTime();
+
+				// Formatear como HH:MM:SS
+				const hours = Math.floor(diffMs / (1000 * 60 * 60));
+				const minutes = Math.floor((diffMs % (1000 * 60 * 60)) / (1000 * 60));
+				const seconds = Math.floor((diffMs % (1000 * 60)) / 1000);
+
+				performanceTime = `${hours.toString().padStart(2, "0")}:${
+					minutes.toString().padStart(2, "0")
+				}:${seconds.toString().padStart(2, "0")}`;
+			}
+		}
 
 		return {
 			...paperFields,
@@ -97,6 +147,7 @@ function flattenToSingleRow(data: PaperData[]): FlattenedRow[] {
 			user_name: user?.name || null,
 			user_username: user?.username || null,
 			answers: answers ? JSON.stringify(answers) : null,
+			performance_time: performanceTime,
 		};
 	});
 }
